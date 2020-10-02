@@ -84,7 +84,7 @@ Note that the LS only stores savegame-identifiers, while actual associated game-
 
 ## Communication
 
-The remainder of ths document...
+The following sections cover the intended messages and communication between LS and game-specfic components.
 
 ### Main workflow
 

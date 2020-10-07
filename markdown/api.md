@@ -267,7 +267,7 @@ Optional, for P2P clients: ```location=___.___.___.___``` (must be a valid IP ad
         ``` 
      * Produces: UTF8-String, encoding a the id of the newly created session (positive long)
  * /api/sessions/{session}
-   * GET: Retrieves details on all sessions. Clients can send a hash of the previous respnse payload, to advised the LS to withhold reply until a relevant update or timeout occurred.
+   * GET: Retrieves details on a specific session. Clients can send a hash of the previous respnse payload, to advised the LS to withhold reply until a relevant update or timeout occurred.
      * Request-Parameters: *```hash=...```* (enables [long-polling](https://github.com/kartoffelquadrat/AsyncRestLib#client-long-poll-counterpart))
      * Curl:  
         ```

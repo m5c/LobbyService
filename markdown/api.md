@@ -404,7 +404,7 @@ Optional, for P2P clients: ```location=___.___.___.___``` (must be a valid IP ad
 [[Download sample ARC configuration](arc/ls-oauth2.arc)]
 
  * /oauth/token
-   * ```PUT```: Creates, registers and returns a new OAuth2-Token and a corresponding Renew-Token.
+   * ```POST```: Creates, registers and returns a new OAuth2-Token and a corresponding Renew-Token.
      * Request-Parameters: ```grant_type=password```, ```username=...```, ```password=...```
      * Alternative Request-Parameters (token renewal): ```grant_type=refresh_token```, ```refresh_token=...```
      * Authentication: ```bgp-client-name:bgp-client-pw```

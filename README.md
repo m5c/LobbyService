@@ -36,7 +36,7 @@ This repository is structured as follows
 
  * Dockerfiles / Docker-compose files: ```/```
  * LS-backend sources: ```/src```
- * Unit tests are located at ```/unit-tests/ls-units-*```  
+ * [Unit tests](unit-tests/about.md) are located at ```/unit-tests/ls-units-*```  
 There is a total of 344 tests/assertions that fully covers the [services REST API](markdown/api.md#user-content-rif-overview).
  * Sample Game-Server for callbacks: ```/units/GameServerStub```
  * Documentation: ```/markdown```

@@ -17,12 +17,12 @@ public class PlatformLauncher {
 
     public static void main(String[] args) {
 
-        System.out.println("Starting up the BoardGamePlatform...");
+        System.out.println("Starting up the Lobby Service...");
 
         // Power up spring boot
         SpringApplication.run(PlatformLauncher.class, args);
 
         // Print welcome message
-        System.out.println("BGP up and running. Verification echo available at: http://127.0.0.1:4242/api/online");
+        System.out.println("Lobby Service up and running. Verification echo available at: http://127.0.0.1:4242/api/online");
     }
 }

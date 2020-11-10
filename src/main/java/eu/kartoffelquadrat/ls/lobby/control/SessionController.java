@@ -426,7 +426,7 @@ public class SessionController {
     @GetMapping("/api/online")
     public String online() {
         long playerAmount = playerRepository.count();
-        return "Board-Game platform is happily serving " + playerAmount + " users.";
+        return "Lobby Service is happily serving " + playerAmount + " users.";
     }
 
     /**

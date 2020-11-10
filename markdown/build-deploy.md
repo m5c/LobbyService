@@ -4,7 +4,7 @@ How to run the LS on your system.
 
 ## About
 
-This section explains how to set up the Board Game Platform on your system, using *Docker*. At the end you will find instructions for advanced users on how to integrate a gameserver into a prepared *docker-compose* configuration. 
+This section explains how to set up the Lobby Service on your system, using *Docker*. At the end you will find instructions for advanced users on how to integrate a gameserver into a prepared *docker-compose* configuration. 
 
  * [Standard setup, using Docker](#standard-setup)
  * [Full Microservice setup, using Docker-Compose](#advanced-setup)
@@ -13,8 +13,7 @@ This section explains how to set up the Board Game Platform on your system, usin
 
 Clone this repository with either ```https```, ```ssh``` or the direct download as ```zip```.
 
- * First option: ```git clone https://github.com/kartoffelquadrat/BoardGamePlatform.git```
- * Or: ```git clone ssh://github.com/kartoffelquadrat/BoardGamePlatform.git```
+ * First option: ```git clone https://github.com/kartoffelquadrat/LobbyService.git```
  * Or click on the download button, then extract the zip file.
 
 Install the following software on your machine:
@@ -47,7 +46,7 @@ Install the following software on your machine:
 
  * Power up the LS REST-API backend:
 ```
-cd BoardGamePlatform
+cd LobbyService
 mvn clean spring-boot:run
 ```
 
@@ -56,7 +55,7 @@ mvn clean spring-boot:run
  * Verify the LS is reachable
    * Open a browser
    * Visit [http://127.0.0.1:4242/api/online](http://127.0.0.1:4242/api/online)  
-You should see ```Board-Game platform is happily serving 5 users.```
+You should see ```Lobby-Service platform is happily serving 5 users.```
    
  * Verify DB access:  
 ```bash
@@ -94,4 +93,4 @@ docker-compose up
  * Make sure the API backend is reachable:  
 ```curl -X GET http://127.0.0.1:4242/api/online```
 
- * [Test API access](http://127.0.0.1:4242/api/online) -> Must display: ```Board-Game platform is happily serving 5 users.```
+ * [Test API access](http://127.0.0.1:4242/api/online) -> Must display: ```Lobby-Service platform is happily serving 5 users.```

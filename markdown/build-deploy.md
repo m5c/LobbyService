@@ -87,7 +87,7 @@ The advanced setup builds and deploys the entire LS and provided GameServers as 
 
  * Power up the microservice:
 ```bash
-cd BoardGamePlatform
+cd LobbyService
 docker-compose up
 ```
 

@@ -4,7 +4,7 @@ This page documents how to access LS provided functionality.
 
 ## RIF Overview
 
-Structured representation of the Board-Game-Platform's REST resources and offered access methods:
+Structured representation of the Lobby Service's REST resources and offered access methods:
 
 ![rif](images/ls-api.png)
 

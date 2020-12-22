@@ -429,7 +429,15 @@ Optional, for P2P clients: ```location=___.___.___.___``` (must be a valid IP ad
         ```
         curl -X GET http://127.0.0.1:4242/oauth/role?access_token=37S8hhdMCdXupIatPm82xJpXXas=
         ```
-     * Produces: UTF8-String
+     * Produces: ```application/json; charset=utf-8```
+        ```json
+        [
+            {
+                "authority": "ROLE_ADMIN"
+            }
+        ]
+        ```  
+	or alternatively: ```ROLE_PLAYER```
  * /oauth/username
    * **```GET```**: Resolves an OAuth2 token provided as request parameter to the account owner's name.
      * Request-Parameters: ```access_token=...```

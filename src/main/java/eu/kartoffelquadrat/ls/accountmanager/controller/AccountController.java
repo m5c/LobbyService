@@ -169,7 +169,7 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Provided colour is not a valid Hexadecimal colour-string.");
 
         // Actually update the colour.
-        player.setPreferredColor(colourForm.getColour());
+        player.setPreferredColour(colourForm.getColour());
         playerRepository.save(player);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
@@ -191,7 +191,7 @@ public class AccountController {
         if (!callerRole.contains("ADMIN") && !principal.getName().equals(name))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Colour can not be queried on behalf of another user.");
 
-        ColourForm colourForm = new ColourForm(playerRepository.findById(name).get().getPreferredColor());
+        ColourForm colourForm = new ColourForm(playerRepository.findById(name).get().getPreferredColour());
         return ResponseEntity.status(HttpStatus.OK).body(colourForm);
     }
 

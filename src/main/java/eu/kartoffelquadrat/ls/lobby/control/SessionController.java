@@ -400,7 +400,7 @@ public class SessionController {
 
         LinkedList<PlayerInfo> players = new LinkedList<>();
         for (String player : session.getPlayers()) {
-            players.add(new PlayerInfo(player, playerRepository.findById(player).get().getPreferredColor()));
+            players.add(new PlayerInfo(player, playerRepository.findById(player).get().getPreferredColour()));
         }
         LauncherInfo launcherInfo = new LauncherInfo(gamename, players, session.getCreator(), session.getSavegameid());
         Unirest.put(urlBuilder.toString()).header("Content-Type", "application/json; charset=utf-8")

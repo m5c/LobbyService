@@ -51,12 +51,12 @@ public class Player {
         this.password = password;
     }
 
-    public String getPreferredColor() {
+    public String getPreferredColour() {
         return preferredColour;
     }
 
-    public void setPreferredColor(String preferredColor) {
-        this.preferredColour = preferredColor;
+    public void setPreferredColour(String preferredColour) {
+        this.preferredColour = preferredColour;
     }
 
     public String getRole() {

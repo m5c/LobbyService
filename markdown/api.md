@@ -126,7 +126,8 @@ The following syntax is used:
             "nextPassword": "abc123_ABC123",
             "oldPassword": "abc_123ABC123"
         }
-        ```
+        ```  
+Note: ```oldPassword``` is not verified if the request was authorized by an admin-token.
      * Curl:  
         ```
         curl -X POST --header 'Content-Type: application/json' --data '{"oldPassword":"abc_123ABC123","nextPassword":"abc123_ABC123"}' http://127.0.0.1:4242/api/users/Foo/password?access_token=mda9H8EVn2IXGACvaFD1df8wdPE=

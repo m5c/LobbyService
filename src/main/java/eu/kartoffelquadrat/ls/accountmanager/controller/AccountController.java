@@ -135,8 +135,8 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New password must not be identical to old password.)");
 
         // Verify the provided previous password is correct - this check is only performed if a non-admin token was used.
+        Player player = playerRepository.findById(name).get();
         if (!callerRole.contains("ADMIN")) {
-            Player player = playerRepository.findById(name).get();
             if (!passwordEncoder.matches(passwordForm.getOldPassword(), player.getPassword()))
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password can not be updated. Provided old password is incorrect.");
         }

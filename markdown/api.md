@@ -187,7 +187,7 @@ Note: ```oldPassword``` is not verified if the request was authorized by an admi
         }
         ```  
         *Note: If the server registration occurred in phantom (p2p) mode, the location string is empty. Instead, the location of all clients is then maintained per session.*
-   * **PUT**: Registers a new Game-Servive at the LS.
+   * **PUT**: Registers a new Game-Service at the LS.
      * Request-Parameters: ```access_token=...``` (admin role required)
      * Header-Parameters: ```Content-Type: application/json```
      * Request-Body:  

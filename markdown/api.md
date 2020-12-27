@@ -249,7 +249,7 @@ Note: ```oldPassword``` is not verified if the request was authorized by an admi
         }
         ```
         *Note: If the server was registered in phantom (p2p) mode the server-location field of adherent sessions is empty. Instead the playerLocations collection holds a location string per player, e.g. "maex":"192.168.1.42".*
-   * **POST**: Creates a new session. Can be a fork of a previously registered savegame if the corresponding body-field is not empty.
+   * **POST**: Creates a new session. Can be a fork of a previously registered savegame if the corresponding body-field is not empty. Restoring from a savegame alters the default minimum and maximum player fields to match the specified savegame.
      * Request-Parameters: ```access_token=...``` (user role required)  
 Optional, for P2P clients: ```location=___.___.___.___``` (must be a valid IP address)
      * Header-Parameters: ```Content-Type: application/json```

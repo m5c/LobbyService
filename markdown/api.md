@@ -413,7 +413,7 @@ Optional, for P2P clients: ```location=___.___.___.___``` (must be a valid IP ad
         ```
         curl -X POST --user bgp-client-name:bgp-client-pw "http://127.0.0.1:4242/oauth/token?grant_type=password&username=admin&password=admin"
         ```  
-        alternatively you can pass the credentials as data. (Auto-protects special characters):  
+        alternatively you can pass the credentials as body data. (Body encoding follows urlencoded syntax. This means any plus sign occurrences in the password string must still be escaped to ```%2B```):  
         ```
         curl -X POST --user bgp-client-name:bgp-client-pw --data "grant_type=password&username=admin&password=admin" "http://127.0.0.1:4242/oauth/token"
         ```

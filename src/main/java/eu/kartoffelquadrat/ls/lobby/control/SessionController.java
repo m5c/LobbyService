@@ -189,8 +189,6 @@ public class SessionController {
      */
     private void deleteSessionAndNotifyListeners(long sessionid) {
 
-        // ToDo: if already launched: notify corresponding gameserver (?)
-
         // Looks good, delete the session and update clients
         sessions.removeSession(sessionid);
         sessionBroadcastManager.touch();

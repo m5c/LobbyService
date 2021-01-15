@@ -17,8 +17,8 @@ public class LocationValidator {
      * @return the validation result
      */
     public static boolean isValidGameServiceLocation(String location) {
-        return Pattern.compile("(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|" +
-                "2[0-4][0-9]|25[0-5])|[a-z]*:[0-9]+").matcher(location).find();
+        return Pattern.compile("((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|" +
+                "2[0-4][0-9]|25[0-5])|([a-z]+)):[0-9]+").matcher(location).find();
     }
 
     /**

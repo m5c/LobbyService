@@ -106,5 +106,26 @@
         </plugins>
         <finalName>${project.artifactId}</finalName>
     </build>
+
+    <profiles>
+        <!--dev profile is intended for native deployment of LS.-->
+	<profile>
+	    <id>dev</id>
+	    <activation>
+		<activeByDefault>true</activeByDefault>
+	    </activation>
+	    <properties>
+		<activatedProperties>dev</activatedProperties>
+	    </properties>
+	</profile>
+        <!--prod profile is intended for dockerized deployment of LS.-->
+	<profile>
+	    <id>prod</id>
+	    <properties>
+		<activatedProperties>prod</activatedProperties>
+	    </properties>
+	</profile>
+    </profiles>
+
 </project>
 

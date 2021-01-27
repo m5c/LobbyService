@@ -125,6 +125,22 @@
 		<activatedProperties>prod</activatedProperties>
 	    </properties>
 	</profile>
+        <!--derby profile is intended for native deployment of LS with file based derby database instead of mySQL connection.-->
+	<profile>
+	    <id>derby</id>
+	    <properties>
+		<activatedProperties>derby</activatedProperties>
+	    </properties>
+            <dependencies>
+		<!-- local DB -->
+		<dependency>
+		    <groupId>org.apache.derby</groupId>
+		    <artifactId>derbyclient</artifactId>
+		    <version>10.15.2.0</version>
+		</dependency>
+            </dependencies>
+	</profile>
+
     </profiles>
 
 </project>

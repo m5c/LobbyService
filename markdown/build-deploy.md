@@ -77,14 +77,14 @@ The advanced setup builds and deploys the entire LS and provided GameServers as 
 ### Preparations
 
  * Write a ```Dockerfile``` for (each) of your game service.
- * Remove the comment lines from ```docker-compose.yml```.
- * Edit the stub service entry for (each of) your Game-Service in: ```docker-compose.yml```.  
+ * Remove the comment lines from [```docker-compose.yml```](../docker-compose.yml).
+ * Edit the stub service entry for (each of) your Game-Service in [```docker-compose.yml```](../docker-compose.yml).  
 Update:
    * Port information
    * Service name
    * Service launch command
    * Serivce dependencies
-   * Path to dockerfile
+   * Path to your ```Dockerfile```
  
 ### Deployment
 

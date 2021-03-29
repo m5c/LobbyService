@@ -76,11 +76,15 @@ The advanced setup builds and deploys the entire LS and provided GameServers as 
 
 ### Preparations
 
- * Reconfigure the REST api's DB-access to use a virtual network:  
-   * Open ```src/main/resources/application.properties```.
-   * Toggle the DB connection entries. (```spring.datasource.url=...```)
-
- * Add a service entry for each of your Game-Services in: ```docker-compose.yml```. Write a corresponding ```Dockerfile``` for each service.
+ * Write a ```Dockerfile``` for (each) of your game service.
+ * Remove the comment lines from ```docker-compose.yml```.
+ * Edit the stub service entry for (each of) your Game-Service in: ```docker-compose.yml```.  
+Update:
+   * Port information
+   * Service name
+   * Service launch command
+   * Serivce dependencies
+   * Path to dockerfile
  
 ### Deployment
 

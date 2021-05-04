@@ -2,7 +2,7 @@
 
 This page documents how to access LS provided functionality.
 
-## RIF Overview
+## Resource Overview
 
 Structured representation of the Lobby Service's REST resources and offered access methods:
 
@@ -19,7 +19,7 @@ Quick navigation:
 
 ## ARC Configuration
 
-The "[Advanced Rest Client](https://install.advancedrestclient.com/install)" is a tool for convenient REST API test access and code generators for various programming lanugages. All major platforms and [a browser plugin](https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo) are supported.
+The "[Advanced Rest Client](https://install.advancedrestclient.com/install)" is a tool for convenient REST API test access and code generators for various programming languages. All major platforms and [a browser plugin](https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo) are supported.
 
  * Prepared ARC filed can be download in the individual sections below.
  * To import an ARC file, open the "APIs" tab, then drop the file on the left panel.

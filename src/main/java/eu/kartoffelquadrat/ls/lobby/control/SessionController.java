@@ -84,6 +84,8 @@ public class SessionController {
     @PostMapping("/api/sessions")
     public ResponseEntity createSession(@RequestBody CreateGameForm createGameForm, Principal principal, @RequestParam(required = false) String location) {
 
+        logger.info("Received create session request.");
+
         // Verify the game is actually offered (registered), no phony call
         GameServerParameters gameParameters;
         try {
@@ -153,6 +155,8 @@ public class SessionController {
         // corresponding BCM
         BroadcastContentManager<Session> sessionBroadcastContentManager = new BroadcastContentManager<>(session);
         sessionSpecificBroadcastManagers.put(sessionId, sessionBroadcastContentManager);
+
+        logger.info("Approved create session request.");
         return ResponseEntity.status(HttpStatus.OK).body(sessionId);
     }
 
@@ -390,16 +394,22 @@ public class SessionController {
      */
     private void notifyGameLaunch(long sessionid, String gamename, Session session) throws RegistryException {
 
+        logger.info("Notifying associated game service about session start.");
+
         // Reject launch notification if game-service was registered in phantom (p2p) mode.
-        if (gameServers.getGameServerParameters(gamename).getLocation().isEmpty())
-            throw new RegistryException("Game-service can not be notified about session stall, because the service " +
-                    "was registered in P2P mode.");
+        if (gameServers.getGameServerParameters(gamename).getLocation().isEmpty()) {
+            String message = "Game-service can not be notified about session stall, because the service " +
+                    "was registered in P2P mode.";
+            logger.error(message);
+            throw new RegistryException(message);
+        }
 
         // Build and send REST request...
         StringBuilder urlBuilder = new StringBuilder("");
         urlBuilder.append(gameServers.getGameServerParameters(gamename).getLocation());
         urlBuilder.append(apiGamesUrl);
         urlBuilder.append(sessionid);
+        logger.info("Session start request resource location: "+ urlBuilder.toString());
 
         LinkedList<PlayerInfo> players = new LinkedList<>();
         for (String player : session.getPlayers()) {
@@ -408,6 +418,8 @@ public class SessionController {
         LauncherInfo launcherInfo = new LauncherInfo(gamename, players, session.getCreator(), session.getSavegameid());
         Unirest.put(urlBuilder.toString()).header("Content-Type", "application/json; charset=utf-8")
                 .body(launcherInfo).asString();
+
+        logger.info("Game service notified about session start.");
     }
 
     /**

@@ -109,43 +109,43 @@
 
     <profiles>
         <!--dev profile is intended for native deployment of LS. (Native LS from JAR, DB in container)-->
-	<profile>
-	    <id>dev</id>
-	    <activation>
-		<activeByDefault>true</activeByDefault>
-	    </activation>
-	    <properties>
-		<activatedProperties>dev</activatedProperties>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <activatedProperties>dev</activatedProperties>
                 <packaging.type>jar</packaging.type>
                 <ls.launcher>eu.kartoffelquadrat.ls.gameregistry.controller.PlatformLauncher</ls.launcher>
-	    </properties>
-	</profile>
+            </properties>
+        </profile>
         <!--prod profile is intended for dockerized deployment of LS. (LS in container, DB in container)-->
-	<profile>
-	    <id>prod</id>
-	    <properties>
-		<activatedProperties>prod</activatedProperties>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <activatedProperties>prod</activatedProperties>
                 <packaging.type>jar</packaging.type>
                 <ls.launcher>eu.kartoffelquadrat.ls.gameregistry.controller.PlatformLauncher</ls.launcher>
-	    </properties>
-	</profile>
+            </properties>
+        </profile>
         <!--derby profile is intended for native deployment of LS with file based derby database instead of mySQL connection.-->
-	<profile>
-	    <id>derby</id>
-	    <properties>
-		<activatedProperties>derby</activatedProperties>
-                <packaging.type>jar</packaging.type> 
+        <profile>
+            <id>derby</id>
+            <properties>
+                <activatedProperties>derby</activatedProperties>
+                <packaging.type>jar</packaging.type>
                 <ls.launcher>eu.kartoffelquadrat.ls.gameregistry.controller.PlatformLauncher</ls.launcher>
-	    </properties>
+            </properties>
             <dependencies>
-		<!-- local DB -->
-		<dependency>
-		    <groupId>org.apache.derby</groupId>
-		    <artifactId>derbyclient</artifactId>
-		    <version>10.15.2.0</version>
-		</dependency>
+                <!-- local DB -->
+                <dependency>
+                    <groupId>org.apache.derby</groupId>
+                    <artifactId>derbyclient</artifactId>
+                    <version>10.15.2.0</version>
+                </dependency>
             </dependencies>
-	</profile>
+        </profile>
         <!--war profile is intended for native deployment of LS, on an existing tomcat instance with native DB.-->
         <profile>
             <id>war</id>
@@ -164,12 +164,12 @@
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                     <scope>provided</scope>
                 </dependency>
-		<!-- war deployment connects to local mysql DB. Extra connector dependency -->
-	        <dependency>
-	            <groupId>mysql</groupId>
-	            <artifactId>mysql-connector-java</artifactId>
-	            <version>8.0.25</version>
-	        </dependency>
+                <!-- war deployment connects to local mysql DB. Extra connector dependency -->
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <version>8.0.25</version>
+                </dependency>
             </dependencies>
         </profile>
     </profiles>

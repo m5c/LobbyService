@@ -12,6 +12,8 @@ import eu.kartoffelquadrat.ls.lobby.model.PlayerInfo;
 import eu.kartoffelquadrat.ls.lobby.model.Sessions;
 import eu.kartoffelquadrat.ls.lobby.model.Session;
 import kong.unirest.Unirest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -58,11 +60,14 @@ public class SessionController {
     private BroadcastContentManager<Sessions> sessionBroadcastManager;
     private Map<Long, BroadcastContentManager<Session>> sessionSpecificBroadcastManagers;
 
+    private Logger logger;
+
     @Autowired
     public SessionController(Sessions sessions) {
         this.sessions = sessions;
         sessionBroadcastManager = new BroadcastContentManager<>(sessions);
         sessionSpecificBroadcastManagers = new LinkedHashMap<>();
+        logger = LoggerFactory.getLogger(SessionController.class);
     }
 
     /**

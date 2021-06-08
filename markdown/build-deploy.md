@@ -47,7 +47,7 @@ Install the following software on your machine:
  * Power up the LS REST-API backend:
 ```
 cd LobbyService
-mvn clean spring-boot:run
+mvn clean spring-boot:run -P dev
 ```
 
 ### Verify setup

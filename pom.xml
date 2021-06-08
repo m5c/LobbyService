@@ -5,7 +5,7 @@
     <groupId>eu.kartoffelquadrat</groupId>
     <artifactId>ls</artifactId>
     <version>1.0.0</version>
-    <packaging>jar</packaging>
+    <packaging>${packaging.type}</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -93,7 +93,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <fork>true</fork>
-                    <mainClass>eu.kartoffelquadrat.ls.gameregistry.controller.PlatformLauncher</mainClass>
+                    <mainClass>${ls.launcher}</mainClass>
                 </configuration>
                 <executions>
                     <execution>
@@ -108,39 +108,70 @@
     </build>
 
     <profiles>
-        <!--dev profile is intended for native deployment of LS.-->
-	<profile>
-	    <id>dev</id>
-	    <activation>
-		<activeByDefault>true</activeByDefault>
-	    </activation>
-	    <properties>
-		<activatedProperties>dev</activatedProperties>
-	    </properties>
-	</profile>
-        <!--prod profile is intended for dockerized deployment of LS.-->
-	<profile>
-	    <id>prod</id>
-	    <properties>
-		<activatedProperties>prod</activatedProperties>
-	    </properties>
-	</profile>
+        <!--dev profile is intended for native deployment of LS. (Native LS from JAR, DB in container)-->
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <activatedProperties>dev</activatedProperties>
+                <packaging.type>jar</packaging.type>
+                <ls.launcher>eu.kartoffelquadrat.ls.gameregistry.controller.PlatformLauncher</ls.launcher>
+            </properties>
+        </profile>
+        <!--prod profile is intended for dockerized deployment of LS. (LS in container, DB in container)-->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <activatedProperties>prod</activatedProperties>
+                <packaging.type>jar</packaging.type>
+                <ls.launcher>eu.kartoffelquadrat.ls.gameregistry.controller.PlatformLauncher</ls.launcher>
+            </properties>
+        </profile>
         <!--derby profile is intended for native deployment of LS with file based derby database instead of mySQL connection.-->
-	<profile>
-	    <id>derby</id>
-	    <properties>
-		<activatedProperties>derby</activatedProperties>
-	    </properties>
+        <profile>
+            <id>derby</id>
+            <properties>
+                <activatedProperties>derby</activatedProperties>
+                <packaging.type>jar</packaging.type>
+                <ls.launcher>eu.kartoffelquadrat.ls.gameregistry.controller.PlatformLauncher</ls.launcher>
+            </properties>
             <dependencies>
-		<!-- local DB -->
-		<dependency>
-		    <groupId>org.apache.derby</groupId>
-		    <artifactId>derbyclient</artifactId>
-		    <version>10.15.2.0</version>
-		</dependency>
+                <!-- local DB -->
+                <dependency>
+                    <groupId>org.apache.derby</groupId>
+                    <artifactId>derbyclient</artifactId>
+                    <version>10.15.2.0</version>
+                </dependency>
             </dependencies>
-	</profile>
-
+        </profile>
+        <!--war profile is intended for native deployment of LS, on an existing tomcat instance with native DB.-->
+        <profile>
+            <id>war</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <activatedProperties>war</activatedProperties>
+                <packaging.type>war</packaging.type>
+                <ls.launcher>eu.kartoffelquadrat.ls.gameregistry.controller.WarLauncher</ls.launcher>
+            </properties>
+            <dependencies>
+                <!-- Build to WAR has extra tomcat dependency-->
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                    <scope>provided</scope>
+                </dependency>
+                <!-- war deployment connects to local mysql DB. Extra connector dependency -->
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <version>8.0.25</version>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
 
 </project>

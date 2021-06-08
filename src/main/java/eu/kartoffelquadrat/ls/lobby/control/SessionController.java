@@ -12,6 +12,8 @@ import eu.kartoffelquadrat.ls.lobby.model.PlayerInfo;
 import eu.kartoffelquadrat.ls.lobby.model.Sessions;
 import eu.kartoffelquadrat.ls.lobby.model.Session;
 import kong.unirest.Unirest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -58,11 +60,14 @@ public class SessionController {
     private BroadcastContentManager<Sessions> sessionBroadcastManager;
     private Map<Long, BroadcastContentManager<Session>> sessionSpecificBroadcastManagers;
 
+    private Logger logger;
+
     @Autowired
     public SessionController(Sessions sessions) {
         this.sessions = sessions;
         sessionBroadcastManager = new BroadcastContentManager<>(sessions);
         sessionSpecificBroadcastManagers = new LinkedHashMap<>();
+        logger = LoggerFactory.getLogger(SessionController.class);
     }
 
     /**
@@ -78,6 +83,8 @@ public class SessionController {
     @PreAuthorize("hasAuthority('ROLE_PLAYER')")
     @PostMapping("/api/sessions")
     public ResponseEntity createSession(@RequestBody CreateGameForm createGameForm, Principal principal, @RequestParam(required = false) String location) {
+
+        logger.info("Received create session request.");
 
         // Verify the game is actually offered (registered), no phony call
         GameServerParameters gameParameters;
@@ -148,6 +155,8 @@ public class SessionController {
         // corresponding BCM
         BroadcastContentManager<Session> sessionBroadcastContentManager = new BroadcastContentManager<>(session);
         sessionSpecificBroadcastManagers.put(sessionId, sessionBroadcastContentManager);
+
+        logger.info("Approved create session request.");
         return ResponseEntity.status(HttpStatus.OK).body(sessionId);
     }
 
@@ -385,16 +394,22 @@ public class SessionController {
      */
     private void notifyGameLaunch(long sessionid, String gamename, Session session) throws RegistryException {
 
+        logger.info("Notifying associated game service about session start.");
+
         // Reject launch notification if game-service was registered in phantom (p2p) mode.
-        if (gameServers.getGameServerParameters(gamename).getLocation().isEmpty())
-            throw new RegistryException("Game-service can not be notified about session stall, because the service " +
-                    "was registered in P2P mode.");
+        if (gameServers.getGameServerParameters(gamename).getLocation().isEmpty()) {
+            String message = "Game-service can not be notified about session stall, because the service " +
+                    "was registered in P2P mode.";
+            logger.error(message);
+            throw new RegistryException(message);
+        }
 
         // Build and send REST request...
         StringBuilder urlBuilder = new StringBuilder("");
         urlBuilder.append(gameServers.getGameServerParameters(gamename).getLocation());
         urlBuilder.append(apiGamesUrl);
         urlBuilder.append(sessionid);
+        logger.info("Session start request resource location: "+ urlBuilder.toString());
 
         LinkedList<PlayerInfo> players = new LinkedList<>();
         for (String player : session.getPlayers()) {
@@ -403,6 +418,8 @@ public class SessionController {
         LauncherInfo launcherInfo = new LauncherInfo(gamename, players, session.getCreator(), session.getSavegameid());
         Unirest.put(urlBuilder.toString()).header("Content-Type", "application/json; charset=utf-8")
                 .body(launcherInfo).asString();
+
+        logger.info("Game service notified about session start.");
     }
 
     /**

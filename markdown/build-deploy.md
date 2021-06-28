@@ -59,22 +59,14 @@ Select one of the provided build profiles, depending on your deployment context:
 | **prod** | *Use BGP docker configuration* | Convenient deployment on production servers. LS is compiled and hosted in a docker container. No JDK required on host. DB connection also uses container identifier. Is used by BGP's *docker-compose* configuration. |
 | **war** | ```mvn clean package -Pwar``` | Advanced build option that compiles the LS sources into a war file, for native deployment on an existing application container. DB access is replaced by a native mySQL access. This profile has the best resources/performance ratio and is compatible to container provided TLS (https). |
 
-### Compile / Deploy API backend
-
- * Power up the LS REST-API backend:
-```
-cd LobbyService
-mvn clean spring-boot:run -P dev
-```
-
 ### Verify setup
 
  * Verify the LS is reachable
    * Open a browser
    * Visit [http://127.0.0.1:4242/api/online](http://127.0.0.1:4242/api/online)  
-You should see ```Lobby-Service platform is happily serving 5 users.```
+You should see ```Lobby-Service platform is happily serving X users.```
    
- * Verify DB access:  
+ * Verify DB access (mySQL, docker):  
 ```bash
 mysql -h 127.0.0.1 -P 3453 --protocol=tcp -u ls -pphaibooth3sha6Hi
  > USE ls;

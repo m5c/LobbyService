@@ -52,7 +52,7 @@ Dockerized DB setup:
 
 Select one of the provided build profiles, depending on your deployment context:
 
-| Profile | Maven Command | About |
+| Profile | Maven Command | Context |
 |---|---|---|
 | **dev** | ```mvn clean  spring-boot:run``` | Default profile for development environments. Starts the LS as a native java application, TLS disabled. Accesses the DB as a dockerized mySQL instance.|
 | **derby** | ```mvn clean spring-boot:run -Pderby``` | Same as *dev* except the default mySQL DB connection configuration is replaced by a DERBY configuration. Fallback for developers whose system does not support docker / are having troubles with a manual mySQL installation. |
@@ -61,11 +61,6 @@ Select one of the provided build profiles, depending on your deployment context:
 
 ### Verify setup
 
- * Verify the LS is reachable
-   * Open a browser
-   * Visit [http://127.0.0.1:4242/api/online](http://127.0.0.1:4242/api/online)  
-You should see ```Lobby-Service platform is happily serving X users.```
-   
  * Verify DB access (mySQL, docker):  
 ```bash
 mysql -h 127.0.0.1 -P 3453 --protocol=tcp -u ls -pphaibooth3sha6Hi
@@ -73,4 +68,10 @@ mysql -h 127.0.0.1 -P 3453 --protocol=tcp -u ls -pphaibooth3sha6Hi
  > SELECT * FROM player;
 ```  
 *(Make sure default users are listed)*
+
+ * Verify the LS is reachable
+   * Open a browser
+   * Visit [http://127.0.0.1:4242/api/online](http://127.0.0.1:4242/api/online)  
+You should see ```Lobby-Service platform is happily serving X users.```
+   
 

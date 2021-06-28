@@ -149,9 +149,6 @@
         <!--war profile is intended for native deployment of LS, on an existing tomcat instance with native DB.-->
         <profile>
             <id>war</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <activatedProperties>war</activatedProperties>
                 <packaging.type>war</packaging.type>

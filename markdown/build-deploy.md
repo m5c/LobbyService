@@ -54,7 +54,7 @@ Select one of the provided build profiles, depending on your deployment context:
 
 | Profile | Maven Command | Context |
 |---|---|---|
-| **dev** | ```mvn clean  spring-boot:run``` | Default profile for development environments. Starts the LS as a native java application, TLS disabled. Accesses the DB as a dockerized mySQL instance.|
+| **dev** | ```mvn clean  spring-boot:run -Pdev``` | Default profile for development environments. Starts the LS as a native java application, TLS disabled. Accesses the DB as a dockerized mySQL instance.|
 | **derby** | ```mvn clean spring-boot:run -Pderby``` | Same as *dev* except the default mySQL DB connection configuration is replaced by a DERBY configuration. Fallback for developers whose system does not support docker / are having troubles with a manual mySQL installation. |
 | **prod** | *Use BGP docker configuration* | Convenient deployment on production servers. LS is compiled and hosted in a docker container. No JDK required on host. DB connection also uses container identifier. Is used by BGP's *docker-compose* configuration. |
 | **war** | ```mvn clean package -Pwar``` | Advanced build option that compiles the LS sources into a war file, for native deployment on an existing application container. DB access is replaced by a native mySQL access. This profile has the best resources/performance ratio and is compatible to container provided TLS (https). |

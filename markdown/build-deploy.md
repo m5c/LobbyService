@@ -29,9 +29,15 @@ Install the following software on your machine:
    * [Windows](https://maven.apache.org/download.cgi)
  * [Docker](https://docs.docker.com/get-docker)
 
-## Standard Setup
+## Setup
 
-### Deploy Database
+The LS requires preconfigured database before it can be powered up. This is required for lookup / persistence of user data.
+
+### Database
+
+The recommended setup is a dockerized mySQL db setup. Setup scripts for a [native mySQL DB](../ls-db-setup.sql) or [native Dervy DB](ls-derby-setup.sql) are provided as fallbacks, but require carefull selection of the [LS build profile](#lobby-service)
+
+Dockerized DB setup:
 
  * Create a docker container from the provided ```Dockerfile```. 
  ```bash
@@ -41,7 +47,18 @@ Install the following software on your machine:
  
  > Note: Creation and deployment by Dockerfile is only required the first time!  
  Use ```docker start ls-db``` from here on.
- 
+
+### Lobby Service
+
+Select one of the provided build profiles, depending on your deployment context:
+
+| Profile | Maven Command | About |
+|---|---|---|
+| **dev** | ```mvn clean  spring-boot:run``` | Default profile for development environments. Starts the LS as a native java application, TLS disabled. |
+| **derby** | ```mvn clean spring-boot:run -Pderby``` | Same as *dev* except the default mySQL DB connection configuration is replaced by a DERBY configuration. Fallback for developers whose system does not support docker / are having reoubles with a manual mySQL installation. |
+| **prod** | *Use BGP docker configuration* | Convenient deployment on production servers. LS is compiled and hosted in a docker container. No JDK required on host. DB connection also uses container identifier. Is used by BGP's *docker-compose* configuration. |
+| **war** | ```mvn clean package -Pwar``` | Advanced build option that compiles the LS sources into a war file, for native deployment on an existing application container. DB access is replaced by a native mySQL access. This profile has the best resources/performance ratio and is compatible to container provided TLS (https). |
+
 ### Compile / Deploy API backend
 
  * Power up the LS REST-API backend:
@@ -63,38 +80,5 @@ mysql -h 127.0.0.1 -P 3453 --protocol=tcp -u ls -pphaibooth3sha6Hi
  > USE ls;
  > SELECT * FROM player;
 ```  
-*(Make sure the five default users are listed)*
+*(Make sure default users are listed)*
 
-
-## Advanced Setup
-
-The advanced setup builds and deploys the entire LS and provided GameServers as a Microservice.
-
- > Disclaimer: You will have to create a corresponding entry in ```docker-compose.yml``` and an extra ```Dockerfile``` for each integrated Game-Server.  
-   **This setup is intended for deployment on production servers, not for game developers.**
-
-
-### Preparations
-
- * Write a ```Dockerfile``` for (each) of your game service.
- * Remove the comment lines from [```docker-compose.yml```](../docker-compose.yml).
- * Edit the stub service entry for (each of) your Game-Service in [```docker-compose.yml```](../docker-compose.yml).  
-Update:
-   * Port information
-   * Service name
-   * Service launch command
-   * Serivce dependencies
-   * Path to your ```Dockerfile```
- 
-### Deployment
-
- * Power up the microservice:
-```bash
-cd LobbyService
-docker-compose up
-```
-
- * Make sure the API backend is reachable:  
-```curl -X GET http://127.0.0.1:4242/api/online```
-
- * [Test API access](http://127.0.0.1:4242/api/online) -> Must display: ```Lobby-Service platform is happily serving 5 users.```

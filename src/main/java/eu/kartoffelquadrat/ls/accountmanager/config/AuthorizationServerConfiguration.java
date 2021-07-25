@@ -5,6 +5,7 @@ package eu.kartoffelquadrat.ls.accountmanager.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -44,6 +45,12 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Autowired
     DataSource dataSource;
 
+    @Value("${access.token.expiry.milliseconds}")
+    private int accessTokenExpiryMilliseconds;
+
+    @Value("${refresh.token.expiry.milliseconds}")
+    private int refreshTokenExpiryMilliseconds;
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 
@@ -54,8 +61,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
                 .scopes("read", "write", "trust")
                 .secret(passwordEncoder.encode("bgp-client-pw"))
-                .accessTokenValiditySeconds(1800). //Access token is only valid for 30 minutes.
-                refreshTokenValiditySeconds(7200); //Refresh token is only valid for 4 hours.
+                .accessTokenValiditySeconds(accessTokenExpiryMilliseconds).
+                refreshTokenValiditySeconds(refreshTokenExpiryMilliseconds);
     }
 
     @Override

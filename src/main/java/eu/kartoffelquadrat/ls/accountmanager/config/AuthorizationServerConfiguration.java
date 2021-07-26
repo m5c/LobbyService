@@ -45,11 +45,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Autowired
     DataSource dataSource;
 
-    @Value("${access.token.expiry.milliseconds}")
-    private int accessTokenExpiryMilliseconds;
+    @Value("${access.token.expiry.seconds}")
+    private int accessTokenExpirySeconds;
 
-    @Value("${refresh.token.expiry.milliseconds}")
-    private int refreshTokenExpiryMilliseconds;
+    @Value("${refresh.token.expiry.seconds}")
+    private int refreshTokenExpirySeconds;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -61,8 +61,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
                 .scopes("read", "write", "trust")
                 .secret(passwordEncoder.encode("bgp-client-pw"))
-                .accessTokenValiditySeconds(accessTokenExpiryMilliseconds).
-                refreshTokenValiditySeconds(refreshTokenExpiryMilliseconds);
+                .accessTokenValiditySeconds(accessTokenExpirySeconds).
+                refreshTokenValiditySeconds(refreshTokenExpirySeconds);
     }
 
     @Override

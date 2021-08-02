@@ -1,4 +1,4 @@
-package eu.kartoffelquadrat.tokenservice;
+package eu.kartoffelquadrat.ls.accountmanager.config;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -14,12 +14,12 @@ import java.util.Arrays;
  * Configuration that injects a new http security filter with highest priority into springs request handler mechanism.
  * This novel filter matches any CORS preflight request and returns an OK + CORS mandated header fields.
  * This way the /oauth/token endpoints can be invoked from browsers pages of foreign origin.
- * Note: This bean should not be renamed to "CorsConfiguration", as it sould then collide with a spring-internal bean.
+ * Note: This bean should not be renamed to "CorsConfiguration", as it would then collide with a spring-internal bean.
  */
 @Configuration
 public class CorsConfig {
 
-    // https://stackoverflow.com/a/42208796
+    // Configuration explained at https://stackoverflow.com/a/42208796
     @Bean
     public FilterRegistrationBean corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

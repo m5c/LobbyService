@@ -416,6 +416,7 @@ public class SessionController {
             players.add(new PlayerInfo(player, playerRepository.findById(player).get().getPreferredColour()));
         }
         LauncherInfo launcherInfo = new LauncherInfo(gamename, players, session.getCreator(), session.getSavegameid());
+	Unirest.config().verifySsl(false);
         Unirest.put(urlBuilder.toString()).header("Content-Type", "application/json; charset=utf-8")
                 .body(launcherInfo).asString();
 

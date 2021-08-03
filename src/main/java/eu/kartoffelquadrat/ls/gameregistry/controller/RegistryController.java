@@ -19,8 +19,11 @@ import java.security.Principal;
 @RestController
 public class RegistryController {
 
-    @Autowired
-    GameServers gameServers;
+    private GameServers gameServers;
+
+    public RegistryController(@Autowired GameServers gameServers) {
+        this.gameServers = gameServers;
+    }
 
     /**
      * Returns array of game kinds (stringarray, as single JSON string) for which a server is registered. (Currently

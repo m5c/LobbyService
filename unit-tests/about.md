@@ -14,7 +14,11 @@ The remainder of this page is only relevant for Lobby-Service developers.
 ## Usage
 
  * Power up the lobby service, as described in the [build/deploy documentation](../markdown/build-deploy.md).  
- * Launch all unit tests with ```ls-units-all.sh```. This will sequentially iterate through all individual test sequences, targeting specific API-tree parts.
+ * Launch all unit tests with:  
+```bash
+    echo -e "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" | ./ls-units-all.sh
+```  
+This will sequentially iterate through all individual test sequences, targeting specific API-tree parts.
  * The unit tests also require verification of outbound messages towards a stub game-service. If prompted for manual verification, compare the expected output to the intercepted communication (printed in yellow).
 
  > Note: Unit testing of a docker-compose setup is not supported, for the test cases also cover expected communication with game-hosts running on the host (not supported by docker compose on OSX).

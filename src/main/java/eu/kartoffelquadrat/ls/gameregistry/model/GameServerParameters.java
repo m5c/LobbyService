@@ -1,6 +1,7 @@
 package eu.kartoffelquadrat.ls.gameregistry.model;
 
 import eu.kartoffelquadrat.ls.gameregistry.controller.LocationValidator;
+import eu.kartoffelquadrat.ls.gameregistry.controller.RegistryController;
 import eu.kartoffelquadrat.ls.gameregistry.controller.RegistryException;
 import eu.kartoffelquadrat.ls.lobby.control.SessionException;
 
@@ -9,7 +10,12 @@ import eu.kartoffelquadrat.ls.lobby.control.SessionException;
  */
 public class GameServerParameters {
 
-    // Name of the gameServer to be registered. Will we converted to lowercase internally.
+    // Border values allowed for any LS compatible game. No game can register with upper/lower player amount
+    // requirements outside these bounds.
+    private static final int MAX_LS_GAME_PLAYERS = 10;
+    private static final int MIN_LS_GAME_PLAYERS = 2;
+
+    // Name of the gameServer to be registered. Will be converted to lowercase internally.
     private String name;
 
     // Location of the server's base URL. If WebSupport is set to true, this URL must return the webclient of the
@@ -97,9 +103,9 @@ public class GameServerParameters {
             problems.append("Name must not be only whitespaces.");
         if (!location.isEmpty() && !LocationValidator.isValidGameServiceLocation(location))
             problems.append("Location must be either empty (P2P mode) or contain a valid IP+Port. ");
-        if (minSessionPlayers > 6 || minSessionPlayers < 0)
-            problems.append("Minimum amount of players out of bound. Valid values are within [0..6]. ");
-        if (maxSessionPlayers > 6 || maxSessionPlayers < 2)
+        if (minSessionPlayers > MAX_LS_GAME_PLAYERS || minSessionPlayers < MIN_LS_GAME_PLAYERS)
+            problems.append("Minimum amount of players out of bound. Valid values are within [2..6]. ");
+        if (maxSessionPlayers > MAX_LS_GAME_PLAYERS || maxSessionPlayers < MIN_LS_GAME_PLAYERS)
             problems.append("Maximum amount of players out of bound. Valid values are within [2..6]. ");
         if (!webSupport.equals("true") && !webSupport.equals("false"))
             problems.append("WebSupport must encode a boolean value. ");

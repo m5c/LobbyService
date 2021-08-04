@@ -67,9 +67,9 @@ public class RegistryController {
      */
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping(value = "/api/gameservices/{gameServiceName}")
-    public ResponseEntity unregisterGameService(@PathVariable String gameServiceName, Principal principal) {
+    public ResponseEntity unregisterGameService(@PathVariable String gameServiceName) {
         try {
-            gameServers.unregisterGameServer(gameServiceName, principal.getName());
+            gameServers.unregisterGameServer(gameServiceName);
         } catch (RegistryException r) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(r.getMessage());
         }
@@ -101,7 +101,7 @@ public class RegistryController {
 
         for (String game : gameServers.getGames()) {
             if (gameServers.getRegistringAdminForGame(game).equals(name))
-                gameServers.unregisterGameServer(game, name);
+                gameServers.unregisterGameServer(game);
         }
     }
 }

@@ -67,11 +67,9 @@ public class GameServers {
         savegames.put(gameName, new GameserverSavegames(gameName));
     }
 
-    public void unregisterGameServer(String gameName, String adminName) throws RegistryException {
+    public void unregisterGameServer(String gameName) throws RegistryException {
         if (!isAlreadyRegisteredName(gameName))
             throw new RegistryException("Can not remove service: \"" + gameName + "\". No such game service is registered.");
-        if (!adminName.equals(serverAdministrators.get(gameName)))
-            throw new RegistryException("Can not remove service: \"" + gameName + "\". Administrator is not the one who registered the game in the first place.");
 
         // Remove all sessions, associated to this game-server. Send DELETE to sessions that are already launched, if required.
         sessionController.removeAllSessionsByGame(gameName);

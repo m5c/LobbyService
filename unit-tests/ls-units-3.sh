@@ -19,7 +19,7 @@ function launchPreparation {
 
 	# Register game server
         TESTCOUNT="LP.2"
-        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"DummyGame1","location":"http://127.0.0.1:4243/FunnyDemoGameServer","minSessionPlayers":"2","maxSessionPlayers":"2", "webSupport":"true"}')
+        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"DummyGame1","displayName":"Dummy Game 1","location":"http://127.0.0.1:4243/FunnyDemoGameServer","minSessionPlayers":"2","maxSessionPlayers":"2", "webSupport":"true"}')
         testMethod "$APIROOT/gameservices/DummyGame1?access_token=$ADMINTOKEN" "200"
 
 	# Get Foo's token
@@ -121,7 +121,7 @@ function mainpath {
 
   # 3.2 register a new dummy gameserver
 	TESTCOUNT="3.2"
-	ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"DummyGame1","location":"http://127.0.0.1:4243/FunnyDemoGameServer","minSessionPlayers":"2","maxSessionPlayers":"2", "webSupport":"true"}')
+	ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"DummyGame1","displayName":"Dummy Game 1","location":"http://127.0.0.1:4243/FunnyDemoGameServer","minSessionPlayers":"2","maxSessionPlayers":"2", "webSupport":"true"}')
 	testMethod "$APIROOT/gameservices/DummyGame1?access_token=$ADMINTOKEN" "200"
 
   # 3.3 Verify the registered gameserver is listed

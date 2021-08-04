@@ -1,6 +1,7 @@
 package eu.kartoffelquadrat.ls.gameregistry.controller;
 
 import com.google.gson.Gson;
+import eu.kartoffelquadrat.ls.gameregistry.model.GameNameBundle;
 import eu.kartoffelquadrat.ls.gameregistry.model.GameServers;
 import eu.kartoffelquadrat.ls.gameregistry.model.GameServerParameters;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * REST controller endpoint for all gameservice related information (with exception to savegames).
@@ -26,12 +29,15 @@ public class RegistryController {
     }
 
     /**
-     * Returns array of game kinds (stringarray, as single JSON string) for which a server is registered. (Currently
-     * exactly one).
+     * Returns array of game name bundles (list of json objects, each entry listing game name and displayname).
      */
     @GetMapping(value = "/api/gameservices", produces = "application/json; charset=utf-8")
-    public String getRegisteredGames() {
-        return new Gson().toJson(gameServers.getGames());
+    public String getRegisteredGames() throws RegistryException {
+        Collection<GameNameBundle> gameNameBundles = new LinkedList<>();
+        for (String gameName : gameServers.getGames()) {
+            gameNameBundles.add(new GameNameBundle(gameName, gameServers.getGameServerParameters(gameName).getDisplayName()));
+        }
+        return new Gson().toJson(gameNameBundles);
     }
 
     /**
@@ -43,7 +49,8 @@ public class RegistryController {
     @PutMapping(value = "/api/gameservices/{gamename}", consumes = "application/json; charset=utf-8")
     public ResponseEntity registerGameService(@PathVariable String gamename, @RequestBody GameServerParameters gameServiceForm, Principal principal) {
 
-        // Reject registration if there were semantic problems with the provided server data.
+        // Reject registration if there were semantic problems with the provided server data (exception raised by
+        // "validate" function).
         try {
             gameServiceForm.validate();
             gameServers.registerGameServer(gamename, gameServiceForm, principal.getName());

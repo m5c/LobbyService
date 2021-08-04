@@ -161,14 +161,14 @@ Note: ```oldPassword``` is not verified if the request was authorized by an admi
 [[Download sample ARC configuration](arc/ls-gameservices.arc)]
 
  * /api/gameservices
-   * GET: Retreive a list with the names of all registered gameservices
+   * GET: Retreive a list with the names of all registered gameservices as name / displayName bundles
      * Curl:  
         ```
         curl -X GET http://127.0.0.1:4242/api/gameservices
         ``` 
      * Produces: ```application/json; charset=utf-8```
         ```json
-        [ "Colt Express", "Acquire", "Powergrid" ]
+        [ {"name":"ColtExpress", "displayName":"Colt Express"}, {"name":"Acquire", "displayName": "Acquire"}, {"name":"PowergridQuebec", "displayName":"Powergrid Québec"} ]
         ```
  * /api/gameservices/{gameservice}
    * GET: Retrieve details on a previously registered Game-Service
@@ -183,6 +183,7 @@ Note: ```oldPassword``` is not verified if the request was authorized by an admi
             "maxSessionPlayers": "5",
             "minSessionPlayers": "3",
             "name": "DummyGame1",
+            "displayName": "Dummy Game 1",
             "webSupport": "true"
         }
         ```  
@@ -197,13 +198,14 @@ Note: ```oldPassword``` is not verified if the request was authorized by an admi
             "maxSessionPlayers": "5",
             "minSessionPlayers": "3",
             "name": "DummyGame1",
+            "displayName": "Dummy Game 1",
             "webSupport": "true"
         }
         ```  
         *Note: The location string can be left empty, to indicate that the clients will connect in P2P mode. In that case clients must provide their location when creating / joining a session. Furthermore the Lobby-Service will suppress all outbound notifications to the phantom game-server. Clients can observe the session status with async update requests on the individual sessions instead.*
      * Curl:  
         ```
-        curl -X PUT --header 'Content-Type: application/json' --data '{"name":"DummyGame1","location":"http://127.0.0.1:4243/DummyGameService","minSessionPlayers":"3","maxSessionPlayers":"5", "webSupport":"true"}' http://127.0.0.1:4242/api/gameservices/DummyGame1?access_token=dA/1to5bFiRvqTem0eiUzY2FITw=
+        curl -X PUT --header 'Content-Type: application/json' --data '{"name":"DummyGame1","displayName":"Dummy Game 1","location":"http://127.0.0.1:4243/DummyGameService","minSessionPlayers":"3","maxSessionPlayers":"5", "webSupport":"true"}' http://127.0.0.1:4242/api/gameservices/DummyGame1?access_token=dA/1to5bFiRvqTem0eiUzY2FITw=
         ``` 
    * **DELETE**: Removes a previously registered gameservice. Implicitly removes all corresponding savegames and sessions. Also sends a [quit request](...) to all affected running sessions.
      * Request-Parameters: ```access_token=...``` (admin role required. Must match admin who registered the service.)

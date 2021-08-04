@@ -130,12 +130,12 @@ public class SavegameController {
     }
 
     public void verifyIsRegisteredGameService(String gameservice) throws SavegameException {
-        if (!gameServers.isAlreadyRegistered(gameservice))
+        if (!gameServers.isAlreadyRegisteredName(gameservice))
             throw new SavegameException("No such gameservice: " + gameservice);
     }
 
     public void verifyIsRegisteredSavegame(String gameservice, String savegameid) throws SavegameException {
-        if (!gameServers.isAlreadyRegistered(gameservice))
+        if (!gameServers.isAlreadyRegisteredName(gameservice))
             throw new SavegameException("Can not look up savegameid for unknown game-service: " + gameservice);
 
         if (!gameServers.getSafegamesForGameServer(gameservice).isExistent(savegameid))

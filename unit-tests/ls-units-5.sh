@@ -57,7 +57,7 @@ function apiTestSequence5 {
 
   # Register gameserver
 	TESTCOUNT="1.4"
-        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"DummyGame1","location":"http://127.0.0.1:4243/FunnyDemoGameServer","minSessionPlayers":"2","maxSessionPlayers":"4", "webSupport":"true"}')
+        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"DummyGame1","displayName":"Dummy Game 1", "location":"http://127.0.0.1:4243/FunnyDemoGameServer","minSessionPlayers":"2","maxSessionPlayers":"4", "webSupport":"true"}')
         testMethod "$APIROOT/gameservices/DummyGame1?access_token=$ADMINTOKEN" "200"
 
   # Create a second admin account (admin5)
@@ -231,7 +231,7 @@ function apiTestSequence5 {
 # Launching a loaded session
         # register a gamserver
 	TESTCOUNT="5.1"
-        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"DummyGame1","location":"http://127.0.0.1:4243/FunnyDemoGameServer","minSessionPlayers":"2","maxSessionPlayers":"4", "webSupport":"true"}')
+        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"DummyGame1","displayName":"Dummy Game 1","location":"http://127.0.0.1:4243/FunnyDemoGameServer","minSessionPlayers":"2","maxSessionPlayers":"4", "webSupport":"true"}')
         testMethod "$APIROOT/gameservices/DummyGame1?access_token=$ADMINTOKEN" "200"
 	
 	# register a savegame for the gameserver

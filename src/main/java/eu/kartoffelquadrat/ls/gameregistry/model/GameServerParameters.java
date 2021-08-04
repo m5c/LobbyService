@@ -1,7 +1,6 @@
 package eu.kartoffelquadrat.ls.gameregistry.model;
 
 import eu.kartoffelquadrat.ls.gameregistry.controller.LocationValidator;
-import eu.kartoffelquadrat.ls.gameregistry.controller.RegistryController;
 import eu.kartoffelquadrat.ls.gameregistry.controller.RegistryException;
 import eu.kartoffelquadrat.ls.lobby.control.SessionException;
 
@@ -15,8 +14,11 @@ public class GameServerParameters {
     private static final int MAX_LS_GAME_PLAYERS = 10;
     private static final int MIN_LS_GAME_PLAYERS = 2;
 
-    // Name of the gameServer to be registered. Will be converted to lowercase internally.
+    // Name of the gameServer to be registered. Will be converted to lowercase internally. This field should be a unique id without special characters (will be used in URLs)
     private String name;
+
+    // Name of the game as it will be displayed to Lobby Service users. All characters can be used here, including whitespaces.
+    private String displayName;
 
     // Location of the server's base URL. If WebSupport is set to true, this URL must return the webclient of the
     // registered game. In any case the registered game must provide subresource, "games/{gameId}" with "PUT", for the
@@ -43,12 +45,14 @@ public class GameServerParameters {
 
     /**
      * @param name
+     * @param name         as the display name of the registered gameserver (how it will be displayed in a UI).
      * @param location
      * @param minSessionPlayers
      * @param maxSessionPlayers
      */
-    public GameServerParameters(String name, String location, int minSessionPlayers, int maxSessionPlayers, String webSupport) {
+    public GameServerParameters(String name, String displayName, String location, int minSessionPlayers, int maxSessionPlayers, String webSupport) {
         this.name = name;
+        this.displayName = displayName;
         this.location = location;
         this.minSessionPlayers = minSessionPlayers;
         this.maxSessionPlayers = maxSessionPlayers;
@@ -60,13 +64,15 @@ public class GameServerParameters {
      * savegames.
      *
      * @param name         as the name of the registered gameserver.
+     * @param name         as the display name of the registered gameserver (how it will be displayed in a UI).
      * @param location     as the Base-URL of the registered gameserver.
      * @param playerAmount as the EXACT amount of players required to launch a sessions with these parameters.
      * @param webSupport   as a flag to indicate whether there is a web client that provides a landing page at the
      *                     standardized location.
      */
-    private GameServerParameters(String name, String location, int playerAmount, String webSupport) {
+    private GameServerParameters(String name, String displayName, String location, int playerAmount, String webSupport) {
         this.name = name;
+        this.displayName = displayName;
         this.location = location;
         this.minSessionPlayers = playerAmount;
         this.maxSessionPlayers = playerAmount;
@@ -75,6 +81,10 @@ public class GameServerParameters {
 
     public String getName() {
         return name;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     public String getLocation() {
@@ -95,12 +105,17 @@ public class GameServerParameters {
 
     /**
      * Semantic validation of the bean content. Invoked when new game is registered.
+     * This does not verify potential collisions with already registered game services.
      */
     public void validate() throws RegistryException {
         StringBuilder problems = new StringBuilder("");
 
         if (name.trim().isEmpty())
             problems.append("Name must not be only whitespaces.");
+        if (displayName.trim().isEmpty())
+            problems.append("Display-Name must not be only whitespaces.");
+        if(!displayName.trim().equals(displayName))
+            problems.append("Provided DisplayName must not contain leading or trailing whitespaces.");
         if (!location.isEmpty() && !LocationValidator.isValidGameServiceLocation(location))
             problems.append("Location must be either empty (P2P mode) or contain a valid IP+Port. ");
         if (minSessionPlayers > MAX_LS_GAME_PLAYERS || minSessionPlayers < MIN_LS_GAME_PLAYERS)
@@ -134,7 +149,7 @@ public class GameServerParameters {
                     "not within bounds of registered server parameters.");
 
         // Create a branded deep copy and return it.
-        return new GameServerParameters(name, location, playerAmount, webSupport);
+        return new GameServerParameters(name, displayName, location, playerAmount, webSupport);
     }
 
     /**

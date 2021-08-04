@@ -13,7 +13,8 @@ The remainder of this page is only relevant for Lobby-Service developers.
 
 ## Usage
 
- * Power up the lobby service, as described in the [build/deploy documentation](../markdown/build-deploy.md).  
+ * Make sure the DB is in its original state (default users activated). You can use the ```dockerResetDb.sh``` command to reset the DB. It brutally removes all Docker configurations on your system, so you have to explicitly agree that you want this by providing the **PRUNE** argument.
+ * Make sure the Lobby Service is running and in its original state (no game services registered, no sessions open). If in doubt simply restart the LobbyService in dev mode: ```mvn clean spring-boot:run -Pdev```
  * Launch all unit tests with:  
 ```bash
     echo -e "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" | ./ls-units-all.sh

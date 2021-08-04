@@ -47,18 +47,18 @@ function p2pmain {
 
 		# Register p2p stub gameserver with "foobar" as IP [reject]
 		TESTCOUNT="O.1"
-       		ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"p2p-phantom","location":"foobar","minSessionPlayers":"2","maxSessionPlayers":"4", "webSupport":"false"}')
+       		ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"p2p-phantom","displayName":"P2P Phantom","location":"foobar","minSessionPlayers":"2","maxSessionPlayers":"4", "webSupport":"false"}')
         	testMethod "$APIROOT/gameservices/p2p-phantom?access_token=$P2PATOKEN" "400"		
 
 		# Register p2p stub gameserver with whitespace " " [reject]
 		TESTCOUNT="O.2"
-        	ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"p2p-phantom","location":" ","minSessionPlayers":"2","maxSessionPlayers":"4", "webSupport":"false"}')
+        	ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"p2p-phantom","displayName":"P2P Phantom","location":" ","minSessionPlayers":"2","maxSessionPlayers":"4", "webSupport":"false"}')
         	testMethod "$APIROOT/gameservices/p2p-phantom?access_token=$P2PATOKEN" "400"		
 	fi
 
 	# Register p2p stub gameserver without an IP [accept - considered a P2P phantom server]
 	TESTCOUNT="M.6"
-        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"p2p-phantom","location":"","minSessionPlayers":"2","maxSessionPlayers":"4", "webSupport":"false"}')
+        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"p2p-phantom","displayName":"P2P Phantom","location":"","minSessionPlayers":"2","maxSessionPlayers":"4", "webSupport":"false"}')
         testMethod "$APIROOT/gameservices/p2p-phantom?access_token=$P2PATOKEN" "200"		
 
 	# Optional test cases for p2p-session creation with nonsense client location

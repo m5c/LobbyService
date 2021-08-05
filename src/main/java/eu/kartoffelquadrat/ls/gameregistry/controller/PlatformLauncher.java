@@ -3,6 +3,7 @@ package eu.kartoffelquadrat.ls.gameregistry.controller;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
@@ -13,7 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(scanBasePackages = {"eu.kartoffelquadrat.ls"})
 @EnableJpaRepositories("eu.kartoffelquadrat.ls")
 @EntityScan("eu.kartoffelquadrat.ls")
-public class PlatformLauncher {
+public class PlatformLauncher extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
 
@@ -23,6 +24,6 @@ public class PlatformLauncher {
         SpringApplication.run(PlatformLauncher.class, args);
 
         // Print welcome message
-        System.out.println("Lobby Service up and running. Verification echo available at: http://127.0.0.1:4242/api/online");
+        System.out.println("Lobby Service up and running. Verification echo available at \"/api/online\".");
     }
 }

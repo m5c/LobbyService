@@ -80,7 +80,7 @@ public class SessionController {
      *                       was registered in phantom (P2P) mode.
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_PLAYER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_PLAYER','ROLE_ADMIN')")
     @PostMapping("/api/sessions")
     public ResponseEntity createSession(@RequestBody CreateGameForm createGameForm, Principal principal, @RequestParam(required = false) String location) {
 
@@ -165,7 +165,7 @@ public class SessionController {
      * Removes a session. Can be either a launched session (restricted to administrators, game end), or an unlaunched
      * session (restricted to the session creator).
      */
-    @PreAuthorize("hasAnyAuthority('ROLE_PLAYER','ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/api/sessions/{sessionid}")
     public ResponseEntity removeSession(@PathVariable long sessionid, Principal principal) {
         // Verify the session in question actually exists
@@ -179,8 +179,12 @@ public class SessionController {
         String callerRole = tokenController.currentUserRole().toString();
 
         // Once launched if an only be killed by an admin, specifically the admin who registered the gameserver
-        if (session.isLaunched() && !callerRole.contains("ADMIN"))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Launched sessions can only be deleted by admin.");
+        if (session.isLaunched() && !(callerRole.contains("ADMIN") || callerRole.contains("SERVICE")))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Launched sessions can only be deleted by admins and services.");
+
+        // TODO: make sure that: Foreign services can not delete sessions - requires assiciateion session <-> service account. Requires DEL cascade.
+//        if( session.isLaunched() && callerRole.contains("SERVICE"))
+//            if(principal.getName().equals(session.get))
 
         // Launched games can only be terminated by the admin who registered the gameserver.
         if (session.isLaunched() && callerRole.contains("ADMIN"))
@@ -255,7 +259,7 @@ public class SessionController {
      *
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_PLAYER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_PLAYER','ROLE_ADMIN')")
     @PutMapping("/api/sessions/{sessionid}/players/{player}")
     public ResponseEntity joinSession(@PathVariable long sessionid, @PathVariable String player, Principal principal, @RequestParam(required = false) String location) {
 
@@ -308,7 +312,7 @@ public class SessionController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_PLAYER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_PLAYER','ROLE_ADMIN')")
     @DeleteMapping("/api/sessions/{sessionid}/players/{player}")
     public ResponseEntity leaveSession(@PathVariable long sessionid, @PathVariable String player, Principal principal) {
 
@@ -348,7 +352,7 @@ public class SessionController {
     /**
      * Launch a previously created session.
      */
-    @PreAuthorize("hasAuthority('ROLE_PLAYER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_PLAYER','ROLE_ADMIN')")
     @PostMapping("/api/sessions/{sessionid}")
     public ResponseEntity launchSession(@PathVariable long sessionid, Principal principal) throws RegistryException {
         // Reject if session id does not exist

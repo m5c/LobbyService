@@ -4,11 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * Spring automatically implements this repository interface in a bean that has the same name (with a change in the
- * case it is called "playerRepository")
+ * case it is called "playerRepository"). Therefore, do not remove this interface!
  */
 public interface PlayerRepository extends JpaRepository<Player, String> {
 
-    // Retrieve all players with a specific name
-//    @Query(value = "SELECT id FROM player WHERE name=?1", nativeQuery = true)
-//    List<Player> findByName(String name);
 }

@@ -18,10 +18,12 @@ import org.springframework.security.oauth2.provider.approval.TokenStoreUserAppro
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+
 import javax.sql.DataSource;
 
 /**
  * Configuration to identify users based on hashed (+salted) passwords stored in database.
+ *
  * @author Maximilian Schiedermeier, August 2020
  */
 @Configuration
@@ -29,10 +31,9 @@ import javax.sql.DataSource;
 public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private ClientDetailsService clientDetailsService;
-
-    @Autowired
     DataSource dataSource;
+    @Autowired
+    private ClientDetailsService clientDetailsService;
 
     @Autowired
     public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
@@ -43,6 +44,12 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         + " from player where name=?");
     }
 
+    /**
+     * Explicitly allow access to token endpoint to unidentified users, as exception to the general rule.
+     *
+     * @param http filter chain endpoint.
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -58,7 +65,7 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    // We use an im-memory token store, for we don't care to lose tokens on platform reboot.
+    // We use an in-memory token store. This means issued tokens do not survive platform reboots, but that is ok.
     @Bean
     public TokenStore tokenStore() {
         return new InMemoryTokenStore();

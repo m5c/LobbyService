@@ -1,5 +1,7 @@
 package eu.kartoffelquadrat.ls.accountmanager.controller;
 
+import eu.kartoffelquadrat.ls.accountmanager.model.Role;
+
 import java.util.regex.Pattern;
 
 /**
@@ -12,9 +14,9 @@ public class AccountForm {
     String name;
     String password;
     String preferredColour;
-    String role;
+    Role role;
 
-    public AccountForm(String name, String password, String preferredColour, String role) {
+    public AccountForm(String name, String password, String preferredColour, Role role) {
         this.name = name;
         this.password = password;
         this.preferredColour = preferredColour;
@@ -45,11 +47,11 @@ public class AccountForm {
         this.preferredColour = preferredColour;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -72,8 +74,9 @@ public class AccountForm {
             problems.append("Password does not comply to password policy. ");
         if (!validateColourString(preferredColour))
             problems.append("Colour is not a valid hex-rgb string, e.g. 3A6C42. ");
-        if (!role.equals("ROLE_ADMIN") && !role.equals("ROLE_PLAYER"))
-            problems.append("Role must be \"ROLE_ADMIN\" or \"ROLE_PLAYER\". ");
+//        if (!role.equals("ROLE_ADMIN") && !role.equals("ROLE_PLAYER"))
+//            problems.append("Role must be \"ROLE_ADMIN\" or \"ROLE_PLAYER\". ");
+        // ToDo: Remove, once switched to role enums.
 
         if (!problems.toString().isEmpty())
             throw new AccountException(problems.toString());

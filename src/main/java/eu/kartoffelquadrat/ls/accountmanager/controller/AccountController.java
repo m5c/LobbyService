@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 /**
- * Rest controller for all account-related operations.
+ * Rest controller for all account-related operations. Covers account related, "/api/users/**"-prefixed resources.
  *
  * @author Maximilian Schiedermeier, August 2020
  */
@@ -114,7 +114,7 @@ public class AccountController {
      *
      * @param name as the player name, for who the password shall be updated.
      */
-    @PreAuthorize("hasAnyAuthority('ROLE_PLAYER','ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/api/users/{name}/password", consumes = "application/json; charset=utf-8")
     public ResponseEntity updatePassword(@PathVariable String name, @RequestBody PasswordForm passwordForm, Principal principal) {
         // Verify the user exists
@@ -149,7 +149,8 @@ public class AccountController {
 
     /**
      * Update method for a user's preferred colour. Requires authentication. Can only be changed by an admin or the
-     * player herself.
+     * player herself. ProAuthorize does not cover services, because services have no colours and should not be allowed
+     * to modify the default field (white).
      *
      * @param name as the player name, for who the colour shall be updated.
      */
@@ -178,6 +179,7 @@ public class AccountController {
 
     /**
      * Query method for a user's preferred colour. Requires authentication.
+     * The PreAuthorize filter excludes services, because those accounts at no point need colours.
      *
      * @param name as the player name, for who the colour shall be retrieved.
      */
@@ -203,7 +205,7 @@ public class AccountController {
      *
      * @param name as the player name, for who the colour shall be retrieved.
      */
-    @PreAuthorize("hasAnyAuthority('ROLE_PLAYER','ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/api/users/{name}")
     public ResponseEntity queryUserDetails(@PathVariable String name, Principal principal) {
 

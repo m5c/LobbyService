@@ -10,7 +10,8 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
 
 /**
- * Configuration to enable additional access filter based on OAuth2 tokens.
+ * Configuration to enable additional access filter based on OAuth2 tokens, by annotations, per method.
+ * (Method level annotations are executed AFTER the global http-security adapter filters)
  *
  */
 @Configuration

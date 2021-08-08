@@ -41,11 +41,11 @@ public class RegistryController {
     }
 
     /**
-     * Endpoint to register a new gameserver at the BGP.
+     * Endpoint to register a new gameserver at the BGP. Can only be used with a service token.
      *
      * @param gameServiceForm
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_SERVICE')")
     @PutMapping(value = "/api/gameservices/{gamename}", consumes = "application/json; charset=utf-8")
     public ResponseEntity registerGameService(@PathVariable String gamename, @RequestBody GameServerParameters gameServiceForm, Principal principal) {
 
@@ -63,9 +63,9 @@ public class RegistryController {
     }
 
     /**
-     *
+     * Endpoint to remove a previously registered service. Can only be used with an admin or service token.
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SERVICE','ROLE_ADMIN')")
     @DeleteMapping(value = "/api/gameservices/{gameServiceName}")
     public ResponseEntity unregisterGameService(@PathVariable String gameServiceName) {
         try {
@@ -92,8 +92,8 @@ public class RegistryController {
     }
 
     /**
-     * Unregisters all gameservers registered by a specific admin. Cascade also removes all affected sessions (no matter
-     * if running or not)
+     * For internal use, only. Unregisters all gameservers registered by a specific admin. Cascade also removes all
+     * affected sessions (no matter if running or not)
      *
      * @param name as the identifier of the administrator.
      */

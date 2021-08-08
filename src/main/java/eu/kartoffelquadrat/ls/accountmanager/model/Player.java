@@ -17,7 +17,8 @@ public class Player {
 
     private String preferredColour;
 
-    private String role; // ROLE_PLAYER / ROLE_ADMIN
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     /**
      * Default constructor is required for JSON de/serialization.
@@ -28,11 +29,11 @@ public class Player {
     /**
      * Player constructor.
      */
-    public Player(String name, String preferredColour, String password, String role) {
+    public Player(String name, String preferredColour, String password, Role role) {
         this.name = name;
         this.preferredColour = preferredColour;
         this.password = password;
-        this.role = role; // ToDo: replace by enum.
+        this.role = role;
     }
 
     public String getName() {
@@ -59,11 +60,11 @@ public class Player {
         this.preferredColour = preferredColour;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

@@ -1,9 +1,14 @@
 package eu.kartoffelquadrat.ls.gameregistry.controller;
 
+import eu.kartoffelquadrat.ls.accountmanager.controller.AccountController;
+import eu.kartoffelquadrat.ls.accountmanager.controller.AccountForm;
+import eu.kartoffelquadrat.ls.accountmanager.model.Player;
+import eu.kartoffelquadrat.ls.accountmanager.model.Role;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
@@ -21,7 +26,26 @@ public class PlatformLauncher extends SpringBootServletInitializer {
         System.out.println("Starting up the Lobby Service...");
 
         // Power up spring boot
-        SpringApplication.run(PlatformLauncher.class, args);
+        ApplicationContext context = SpringApplication.run(PlatformLauncher.class, args);
+//        String[] allBeanNames = context.getBeanDefinitionNames();
+//        for(String beanName : allBeanNames) {
+//            System.out.println(beanName);
+//        }
+//
+//        // Manually add a new admin
+//        AccountController accountController = (AccountController) context.getBean("accountController");
+//
+//        // Add admin
+//        AccountForm adminForm = new AccountForm("maex", "abc123_ABC123", "FFA82E", Role.ROLE_ADMIN);
+//        accountController.registerPlayer(adminForm,"maex");
+//
+//        // Add maex
+//        AccountForm playerForm = new AccountForm("joerg", "abc123_ABC123", "CAFFEE", Role.ROLE_PLAYER);
+//        accountController.registerPlayer(playerForm,"joerg");
+//
+//        // Add xox
+//        AccountForm serviceForm = new AccountForm("xox", "abc123_ABC123", "000000", Role.ROLE_SERVICE);
+//        accountController.registerPlayer(serviceForm,"xox");
 
         // Print welcome message
         System.out.println("Lobby Service up and running. Verification echo available at \"/api/online\".");

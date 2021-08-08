@@ -31,7 +31,7 @@ public class TokenController {
     /**
      * Resolve logged in user back to her roles, based on token
      */
-    @PreAuthorize("hasAnyAuthority('ROLE_PLAYER','ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/oauth/role")
     public Collection<SimpleGrantedAuthority> currentUserRole() {
 
@@ -42,7 +42,7 @@ public class TokenController {
     /**
      * Resolve logged in user back to username based on token
      */
-    @PreAuthorize("hasAnyAuthority('ROLE_PLAYER','ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/oauth/username")
     public String currentUserName(Principal principal) {
         return principal.getName();
@@ -52,7 +52,7 @@ public class TokenController {
      * Endpoint to revoke an existing OAuth2 token (and the associated refresh token). Must be called on logout and user
      * deletion. Can only be called by the token owner.
      */
-    @PreAuthorize("hasAnyAuthority('ROLE_PLAYER','ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/oauth/active")
     public ResponseEntity revokeOwnTokens(Principal principal) {
 

@@ -34,7 +34,7 @@ public class SavegameController {
     @Autowired
     SessionController sessionController;
 
-    @PreAuthorize("hasAnyAuthority('ROLE_PLAYER','ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/api/gameservices/{gameservice}/savegames", produces = "application/json; charset=utf-8")
     public ResponseEntity getSavegamesForGameservice(@PathVariable String gameservice) {
 
@@ -47,7 +47,7 @@ public class SavegameController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SERVICE','ROLE_ADMIN')")
     @DeleteMapping("/api/gameservices/{gameservice}/savegames")
     public ResponseEntity deleteAllSavegamesForGameservice(@PathVariable String gameservice) {
 
@@ -60,7 +60,7 @@ public class SavegameController {
         }
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_PLAYER','ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/api/gameservices/{gameservice}/savegames/{savegameid}", produces = "application/json; charset=utf-8")
     public ResponseEntity getSpecificSafegameForGameservice(@PathVariable String gameservice, @PathVariable String savegameid) {
         try {
@@ -72,7 +72,7 @@ public class SavegameController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_SERVICE')")
     @PutMapping(value = "/api/gameservices/{gameservice}/savegames/{savegameid}", consumes = "application/json; charset=utf-8")
     public ResponseEntity registerSafegameForGameservice(@PathVariable String gameservice, @PathVariable String savegameid, @RequestBody Savegame savegame, Principal principal) {
         if (!principal.getName().equals(gameServers.getRegistringAdminForGame(gameservice)))
@@ -89,7 +89,7 @@ public class SavegameController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SERVICE','ROLE_ADMIN')")
     @DeleteMapping("/api/gameservices/{gameservice}/savegames/{savegameid}")
     public ResponseEntity deleteSpecificSafegameForGameservice(@PathVariable String gameservice, @PathVariable String savegameid, Principal principal) {
         if (!principal.getName().equals(gameServers.getRegistringAdminForGame(gameservice)))

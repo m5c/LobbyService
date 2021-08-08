@@ -69,14 +69,17 @@ public class AccountController {
     }
 
     /**
-     * Delete a specific user from the database, identified by name
+     * Delete a specific account from the database, identified by name. If the account ais associated with running
+     * sessions then this implicitly cascade removes those sessions. In case of an (admin or) player: remove all
+     * sessions where this player is involved In case of a service: Remove all sessions associated to this service
+     * account.
      *
      * @param name as the username of the user-record to be deleted
      * @return
      */
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/api/users/{name}")
-    public ResponseEntity deletePlayer(@PathVariable String name, Principal principal) {
+    public ResponseEntity deleteAccount(@PathVariable String name, Principal principal) {
 
         if (!playerRepository.findById(name).isPresent())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User cannot be deleted. Does not exist.");
@@ -89,15 +92,15 @@ public class AccountController {
         // revoke active tokens of users in case they have not yet expired
         tokenController.revokeTokensByName(name);
 
-        // If player was an admin, remove all gameservers registered by that admin. Cascades: also removes all sessions of the affected gameservers
-        if (callerRole.equals("[ROLE_ADMIN]"))
+        // If account belongs to a service, remove all gameservers registered by that account. Cascades: also removes all sessions of the affected gameservers
+        if (callerRole.equals("[ROLE_SERVICE]"))
             try {
-                registryController.unregisterByAdmin(name);
+                registryController.unregisterByService(name);
             } catch (RegistryException re) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Implicit of removal of associated games and sessions failed due to admin identifier mismatch.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Implicit of removal of associated games and sessions failed due to service identifier mismatch.");
             }
 
-        // Remove player from all un-launched sessions where she is enrolled, but not the creator. Remove all other
+        // If a player or admin: Remove player from all un-launched sessions where she is enrolled, but not the creator. Remove all other
         // affected sessions and notify listeners and game-servers where required.
         try {
             sessionController.removePlayerFromAllSessions(name);
@@ -178,8 +181,8 @@ public class AccountController {
     }
 
     /**
-     * Query method for a user's preferred colour. Requires authentication.
-     * The PreAuthorize filter excludes services, because those accounts at no point need colours.
+     * Query method for a user's preferred colour. Requires authentication. The PreAuthorize filter excludes services,
+     * because those accounts at no point need colours.
      *
      * @param name as the player name, for who the colour shall be retrieved.
      */

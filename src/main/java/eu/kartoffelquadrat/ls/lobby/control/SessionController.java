@@ -182,13 +182,13 @@ public class SessionController {
         if (session.isLaunched() && !(callerRole.contains("ADMIN") || callerRole.contains("SERVICE")))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Launched sessions can only be deleted by admins and services.");
 
-        // TODO: make sure that: Foreign services can not delete sessions - requires assiciateion session <-> service account. Requires DEL cascade.
-//        if( session.isLaunched() && callerRole.contains("SERVICE"))
-//            if(principal.getName().equals(session.get))
+        if( session.isLaunched() && callerRole.contains("SERVICE"))
+            if(!principal.getName().equals(gameServers.getRegistringServiceAccountForGame(session.getGameName())))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Launched sessions can only be deleted by the associated service or an admin.");
 
         // Launched games can only be terminated by the admin who registered the gameserver.
         if (session.isLaunched() && callerRole.contains("ADMIN"))
-            if (!principal.getName().equals(gameServers.getRegistringAdminForGame(session.getGameName())))
+            if (!principal.getName().equals(gameServers.getRegistringServiceAccountForGame(session.getGameName())))
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Launched sessions can only be deleted by the admin who registered the corresponding game-server.");
 
         deleteSessionAndNotifyListeners(sessionid);

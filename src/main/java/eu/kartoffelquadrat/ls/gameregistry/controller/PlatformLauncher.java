@@ -27,25 +27,6 @@ public class PlatformLauncher extends SpringBootServletInitializer {
 
         // Power up spring boot
         ApplicationContext context = SpringApplication.run(PlatformLauncher.class, args);
-//        String[] allBeanNames = context.getBeanDefinitionNames();
-//        for(String beanName : allBeanNames) {
-//            System.out.println(beanName);
-//        }
-//
-//        // Manually add a new admin
-//        AccountController accountController = (AccountController) context.getBean("accountController");
-//
-//        // Add admin
-//        AccountForm adminForm = new AccountForm("maex", "abc123_ABC123", "FFA82E", Role.ROLE_ADMIN);
-//        accountController.registerPlayer(adminForm,"maex");
-//
-//        // Add maex
-//        AccountForm playerForm = new AccountForm("joerg", "abc123_ABC123", "CAFFEE", Role.ROLE_PLAYER);
-//        accountController.registerPlayer(playerForm,"joerg");
-//
-//        // Add xox
-//        AccountForm serviceForm = new AccountForm("xox", "abc123_ABC123", "000000", Role.ROLE_SERVICE);
-//        accountController.registerPlayer(serviceForm,"xox");
 
         // Print welcome message
         System.out.println("Lobby Service up and running. Verification echo available at \"/api/online\".");

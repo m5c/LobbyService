@@ -75,7 +75,7 @@ public class SavegameController {
     @PreAuthorize("hasAuthority('ROLE_SERVICE')")
     @PutMapping(value = "/api/gameservices/{gameservice}/savegames/{savegameid}", consumes = "application/json; charset=utf-8")
     public ResponseEntity registerSafegameForGameservice(@PathVariable String gameservice, @PathVariable String savegameid, @RequestBody Savegame savegame, Principal principal) {
-        if (!principal.getName().equals(gameServers.getRegistringAdminForGame(gameservice)))
+        if (!principal.getName().equals(gameServers.getRegistringServiceAccountForGame(gameservice)))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Savegames can only be deleted by the " +
                     "admin who also registered the corresponding gameserver.");
         try {
@@ -92,7 +92,7 @@ public class SavegameController {
     @PreAuthorize("hasAnyAuthority('ROLE_SERVICE','ROLE_ADMIN')")
     @DeleteMapping("/api/gameservices/{gameservice}/savegames/{savegameid}")
     public ResponseEntity deleteSpecificSafegameForGameservice(@PathVariable String gameservice, @PathVariable String savegameid, Principal principal) {
-        if (!principal.getName().equals(gameServers.getRegistringAdminForGame(gameservice)))
+        if (!principal.getName().equals(gameServers.getRegistringServiceAccountForGame(gameservice)))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Savegames can only be deleted by the " +
                     "admin who also registered the corresponding gameserver.");
         try {

@@ -21,8 +21,8 @@ public class GameServers {
     // stores the IP address of servers for specific game kinds.
     private Map<String, GameServerParameters> registeredGameServers;
 
-    // Stores the name of the admin who registered a game server.
-    // Only the same admin is allowed to terminate games (launched sessions) or unregister the game service.
+    // Stores the name of the service account who registered a game server.
+    // Only the same serice account is allowed to terminate games (launched sessions) or unregister the game service.
     private Map<String, String> serverAdministrators;
 
     // Stored the registered savegames (by id), per gameserver;
@@ -53,7 +53,7 @@ public class GameServers {
         return registeredDisplayNames.anyMatch(displayNames -> displayNames.contains(displayName));
     }
 
-    public void registerGameServer(String gameName, GameServerParameters params, String adminName) throws RegistryException {
+    public void registerGameServer(String gameName, GameServerParameters params, String serviceAccountName) throws RegistryException {
         if (!gameName.equals(params.getName()))
             throw new RegistryException("Name provided in service description must match the registration name.");
 
@@ -63,7 +63,7 @@ public class GameServers {
         }
 
         registeredGameServers.put(gameName, params);
-        serverAdministrators.put(gameName, adminName);
+        serverAdministrators.put(gameName, serviceAccountName);
         savegames.put(gameName, new GameserverSavegames(gameName));
     }
 
@@ -99,7 +99,7 @@ public class GameServers {
         return registeredGameServers.get(name);
     }
 
-    public String getRegistringAdminForGame(String game)
+    public String getRegistringServiceAccountForGame(String game)
     {
         return serverAdministrators.get(game);
     }

@@ -49,12 +49,12 @@ public class RegistryController {
     @PutMapping(value = "/api/gameservices/{gamename}", consumes = "application/json; charset=utf-8")
     public ResponseEntity registerGameService(@PathVariable String gamename, @RequestBody GameServerParameters gameServiceForm, Principal principal) {
 
-        // Reject registration if there were semantic problems with the provided server data (exception raised by
-        // "validate" function).
         try {
             gameServiceForm.validate();
             gameServers.registerGameServer(gamename, gameServiceForm, principal.getName());
         } catch (RegistryException r) {
+            // Reject registration if there were semantic problems with the provided server data (exception raised by
+            // "validate" function).
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(r.getMessage());
         }
 
@@ -92,15 +92,15 @@ public class RegistryController {
     }
 
     /**
-     * For internal use, only. Unregisters all gameservers registered by a specific admin. Cascade also removes all
-     * affected sessions (no matter if running or not)
+     * For internal use, only. Unregisters all gameservers registered by a specific service account. Cascade also
+     * removes all affected sessions (no matter if running or not)
      *
      * @param name as the identifier of the administrator.
      */
-    public void unregisterByAdmin(String name) throws RegistryException {
+    public void unregisterByService(String name) throws RegistryException {
 
         for (String game : gameServers.getGames()) {
-            if (gameServers.getRegistringAdminForGame(game).equals(name))
+            if (gameServers.getRegistringServiceAccountForGame(game).equals(name))
                 gameServers.unregisterGameServer(game);
         }
     }

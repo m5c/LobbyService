@@ -23,32 +23,32 @@ function apiTestSequence2 {
   # 2.1 request admin session token
 	TESTCOUNT="2.1"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=admin&password=admin" "200"
+	testMethod "$TOKENROOT/token?grant_type=password&username=maex&password=abc123_ABC123" "200"
 	ADMINTOKEN=$(echo $PAYLOAD | cut -c 18-45)
 	echo "[DEBUG] Admin-token: $ADMINTOKEN"
 
-  # 2.2 request maex session token
+  # 2.2 request joerg session token
 	TESTCOUNT="2.2"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=maex&password=abc123" "200"
-	MAEXTOKEN=$(echo $PAYLOAD | cut -c 18-45)
-	echo "[DEBUG] Maex-token: $MAEXTOKEN"
+	testMethod "$TOKENROOT/token?grant_type=password&username=joerg&password=abc123_ABC123" "200"
+	JOERGTOKEN=$(echo $PAYLOAD | cut -c 18-45)
+	echo "[DEBUG] Joerg-token: $JOERGTOKEN"
 
-  # 3.1 try to resolve maex token
+  # 3.1 try to resolve joerg token
 	TESTCOUNT="3.1"
-	ARGS=(-X GET  -H "Authorization:Bearer $MAEXTOKEN") # Note: Requires the UNESCAPED token as param.
+	ARGS=(-X GET  -H "Authorization:Bearer $JOERGTOKEN") # Note: Requires the UNESCAPED token as param.
 	testMethod "$TOKENROOT/username" "200"
-	assertexists "maex" $PAYLOAD
+	assertexists "joerg" $PAYLOAD
 	
   # 3.2 try to resolve admin token
 	TESTCOUNT="3.2"
 	ARGS=(-X GET  -H "Authorization:Bearer $ADMINTOKEN") # Note: Requires the UNESCAPED token as param.
 	testMethod "$TOKENROOT/username" "200"
-	assertexists "admin" $PAYLOAD
+	assertexists "maex" $PAYLOAD
 
 	# from here one we need the escaped tokens, for we use tham as URL parameters.
 	ADMINTOKEN=$(escapetoken $ADMINTOKEN)
-	MAEXTOKEN=$(escapetoken $MAEXTOKEN)
+	JOERGTOKEN=$(escapetoken $JOERGTOKEN)
 
   # 4.1a create a new user "foo", who is a "player", using admin token, reject, URL mismatch
 	TESTCOUNT="4.1a"

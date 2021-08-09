@@ -20,7 +20,7 @@ function launchPreparation {
 	# Register game server
         TESTCOUNT="LP.2"
         ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"DummyGame1","displayName":"Dummy Game 1","location":"http://127.0.0.1:4243/FunnyDemoGameServer","minSessionPlayers":"2","maxSessionPlayers":"2", "webSupport":"true"}')
-        testMethod "$APIROOT/gameservices/DummyGame1?access_token=$ADMINTOKEN" "200"
+        testMethod "$APIROOT/gameservices/DummyGame1?access_token=$SERVICETOKEN" "200"
 
 	# Get Foo's token
         TESTCOUNT="LP.3"
@@ -85,7 +85,7 @@ function mainpath {
   # 2.1 request admin session token
 	TESTCOUNT="2.1"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=admin&password=admin" "200"
+	testMethod "$TOKENROOT/token?grant_type=password&username=maex&password=abc123_ABC123" "200"
 	ADMINTOKEN=$(echo $PAYLOAD | cut -c 18-45)
 	ADMINTOKEN=$(escapetoken $ADMINTOKEN)
 	echo "[DEBUG] Admin-token: $ADMINTOKEN"
@@ -93,7 +93,7 @@ function mainpath {
   # 2.2 request a user token
 	TESTCOUNT="2.3"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=maex&password=abc123" "200"
+	testMethod "$TOKENROOT/token?grant_type=password&username=hyacinth&password=abc123_ABC123" "200"
 	USERTOKEN=$(echo $PAYLOAD | cut -c 18-45)
 	USERTOKEN=$(escapetoken $USERTOKEN)
 	echo "[DEBUG] User-token: $USERTOKEN"
@@ -101,7 +101,7 @@ function mainpath {
   # 2.2 request a second user token
 	TESTCOUNT="2.4"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=ryan&password=abc123" "200"
+	testMethod "$TOKENROOT/token?grant_type=password&username=ryan&password=abc123_ABC123" "200"
 	USERTOKEN2=$(echo $PAYLOAD | cut -c 18-45)
 	USERTOKEN2=$(escapetoken $USERTOKEN2)
 	echo "[DEBUG] User-token 2: $USERTOKEN2"
@@ -109,7 +109,7 @@ function mainpath {
   # 2.2 request a third user token
 	TESTCOUNT="2.5"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=joerg&password=abc123" "200"
+	testMethod "$TOKENROOT/token?grant_type=password&username=joerg&password=abc123_ABC123" "200"
 	USERTOKEN3=$(echo $PAYLOAD | cut -c 18-45)
 	USERTOKEN3=$(escapetoken $USERTOKEN3)
 	echo "[DEBUG] User-token 2: $USERTOKEN3"
@@ -119,10 +119,21 @@ function mainpath {
 	ARGS=(-X POST --header 'Content-Type: application/json' --data '{"game":"DummyGame1", "creator":"maex", "savegame":""}')
 	testMethod "$APIROOT/sessions?access_token=$USERTOKEN" "400"	
 
-  # 3.2 register a new dummy gameserver
-	TESTCOUNT="3.2"
+  # 3.2a get service token
+          # 2.1 request service session token
+        TESTCOUNT="3.2a"
+        ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
+        testMethod "$TOKENROOT/token?grant_type=password&username=xox&password=laaPhie*aiN0" "200"
+        assertexists "access_token" $PAYLOAD
+        SERVICETOKEN=$(echo $PAYLOAD | cut -c 18-45)
+        SERVICETOKEN=$(escapetoken $SERVICETOKEN)
+        #echo $PAYLOAD
+        echo "[DEBUG] Service-token: $SERVICETOKEN"
+
+  # 3.2b register a new dummy gameserver
+	TESTCOUNT="3.2b"
 	ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"DummyGame1","displayName":"Dummy Game 1","location":"http://127.0.0.1:4243/FunnyDemoGameServer","minSessionPlayers":"2","maxSessionPlayers":"2", "webSupport":"true"}')
-	testMethod "$APIROOT/gameservices/DummyGame1?access_token=$ADMINTOKEN" "200"
+	testMethod "$APIROOT/gameservices/DummyGame1?access_token=$SERVICETOKEN" "200"
 
   # 3.3 Verify the registered gameserver is listed
 	TESTCOUNT="3.3"
@@ -146,7 +157,7 @@ function mainpath {
 
   # 3.6 create a session
         TESTCOUNT="3.6"
-	ARGS=(-X POST --header 'Content-Type: application/json' --data '{"game":"DummyGame1", "creator":"maex", "savegame":""}')
+	ARGS=(-X POST --header 'Content-Type: application/json' --data '{"game":"DummyGame1", "creator":"hyacinth", "savegame":""}')
 	testMethod "$APIROOT/sessions?access_token=$USERTOKEN" "200"	
 
   # 3.7 Verify dummy game shows up in list of open sessions
@@ -194,7 +205,7 @@ function mainpath {
         TESTCOUNT="5.3"
 	ARGS=(-X GET)
 	testMethod "$APIROOT/sessions/$SESSIONID" "200"	
-	assertexists "maex" $PAYLOAD
+	assertexists "hyacinth" $PAYLOAD
 	assertexists "ryan" $PAYLOAD
 
   # 5.4 join the game so there are enough players (reject, game full)
@@ -215,7 +226,7 @@ function mainpath {
   # 5.7 leave the game as creator (reject)
         TESTCOUNT="5.7"
 	ARGS=(-X DELETE)
-	testMethod "$APIROOT/sessions/$SESSIONID/players/maex?access_token=$USERTOKEN" "400"	
+	testMethod "$APIROOT/sessions/$SESSIONID/players/hyacinth?access_token=$USERTOKEN" "400"	
 
   # 5.8 join the game again, with the other player, so there are enough players for the game to be launched.
         TESTCOUNT="5.8"
@@ -226,7 +237,7 @@ function mainpath {
         TESTCOUNT="5.9"
 	ARGS=(-X GET)
 	testMethod "$APIROOT/sessions/$SESSIONID" "200"	
-	assertexists "maex" $PAYLOAD
+	assertexists "hyacinth" $PAYLOAD
 	assertexists "joerg" $PAYLOAD
 
 ## Launch and terminate
@@ -282,7 +293,7 @@ fi
   # 6.8 terminate the launched session (game)
         TESTCOUNT="6.8"
         ARGS=(-X DELETE)
-        testMethod "$APIROOT/sessions/$SESSIONID?access_token=$ADMINTOKEN" "200"	
+        testMethod "$APIROOT/sessions/$SESSIONID?access_token=$SERVICETOKEN" "200"	
 
   # 6.9 verify session no longer indexed
         TESTCOUNT="6.9"

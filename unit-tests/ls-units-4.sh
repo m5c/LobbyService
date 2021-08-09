@@ -23,7 +23,7 @@ function apiTestSequence4 {
   # 2.1 request admin session token
 	TESTCOUNT="2.1"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=admin&password=admin" "200"
+	testMethod "$TOKENROOT/token?grant_type=password&username=maex&password=abc123_ABC123" "200"
 	ADMINTOKEN=$(echo $PAYLOAD | cut -c 18-45)
 	ADMINTOKEN=$(escapetoken $ADMINTOKEN)
 
@@ -39,15 +39,15 @@ function apiTestSequence4 {
         FOOTOKEN=$(echo $PAYLOAD | cut -c 18-45)
         FOOTOKEN=$(escapetoken $FOOTOKEN)
 
-  # 2.4 Get maex'token
+  # 2.4 Get joergs'token
         TESTCOUNT="2.4"
         ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-        testMethod "$TOKENROOT/token?grant_type=password&username=maex&password=abc123" "200"
+        testMethod "$TOKENROOT/token?grant_type=password&username=joerg&password=abc123_ABC123" "200"
         USERTOKEN=$(echo $PAYLOAD | cut -c 18-45)
         USERTOKEN=$(escapetoken $USERTOKEN)
 
 # Details and colour
-  # 3.1 try to query foo details as maex (reject)
+  # 3.1 try to query foo details as joerg (reject)
         TESTCOUNT="3.1"
         ARGS=(-X GET)
         testMethod "$APIROOT/users/Foo?access_token=$USERTOKEN" "400"
@@ -86,7 +86,7 @@ function apiTestSequence4 {
 	assertexists 0000FF $PAYLOAD
 
 # Password 
-  # 4.1 try to modify foos password as maex
+  # 4.1 try to modify foos password as joerg
         TESTCOUNT="4.1"
         ARGS=(-X POST --header 'Content-Type: application/json' --data '{"oldPassword":"abc_123ABC123", "nextPassword":"abc_123ABC123"}')
         testMethod "$APIROOT/users/Foo/password?access_token=$USERTOKEN" "400"
@@ -123,7 +123,7 @@ function apiTestSequence4 {
 
 # Clean up
 
-  # 5.1 Delete user foo as foo
+  # 5.1 Delete user foo as admin
         TESTCOUNT="5.1"
         ARGS=(-X DELETE)
         testMethod "$APIROOT/users/Foo?access_token=$ADMINTOKEN" "200"

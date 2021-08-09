@@ -11,7 +11,7 @@ sleep 10
 ./ls-units-1.sh
 ./ls-units-2.sh
 ./ls-units-3.sh
-#./ls-units-4.sh
+./ls-units-4.sh
 #./ls-units-5.sh
 #./ls-units-6.sh
 

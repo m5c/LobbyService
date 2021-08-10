@@ -1,5 +1,6 @@
 package eu.kartoffelquadrat.ls.gameregistry.controller;
 
+import eu.kartoffelquadrat.ls.accountmanager.controller.TokenController;
 import eu.kartoffelquadrat.ls.accountmanager.model.PlayerRepository;
 import eu.kartoffelquadrat.ls.gameregistry.model.GameServerParameters;
 import eu.kartoffelquadrat.ls.gameregistry.model.GameServers;
@@ -34,6 +35,9 @@ public class SavegameController {
     @Autowired
     SessionController sessionController;
 
+    @Autowired
+    TokenController tokenController;
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/api/gameservices/{gameservice}/savegames", produces = "application/json; charset=utf-8")
     public ResponseEntity getSavegamesForGameservice(@PathVariable String gameservice) {
@@ -49,8 +53,15 @@ public class SavegameController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_SERVICE','ROLE_ADMIN')")
     @DeleteMapping("/api/gameservices/{gameservice}/savegames")
-    public ResponseEntity deleteAllSavegamesForGameservice(@PathVariable String gameservice) {
+    public ResponseEntity deleteAllSavegamesForGameservice(@PathVariable String gameservice, Principal principal) {
 
+        // In case of a service token used: verify it is the right service.
+        String callerRole = tokenController.currentUserRole().toString();
+        if (!callerRole.equals("[ROLE_ADMIN]")) {
+            if (!principal.getName().equals(gameServers.getRegistringServiceAccountForGame(gameservice)))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Savegames can only be deleted by the " +
+                        "service who also registered the corresponding gameserver.");
+        }
         try {
             verifyIsRegisteredGameService(gameservice);
             gameServers.getSafegamesForGameServer(gameservice).removeAll();
@@ -92,9 +103,14 @@ public class SavegameController {
     @PreAuthorize("hasAnyAuthority('ROLE_SERVICE','ROLE_ADMIN')")
     @DeleteMapping("/api/gameservices/{gameservice}/savegames/{savegameid}")
     public ResponseEntity deleteSpecificSafegameForGameservice(@PathVariable String gameservice, @PathVariable String savegameid, Principal principal) {
-        if (!principal.getName().equals(gameServers.getRegistringServiceAccountForGame(gameservice)))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Savegames can only be deleted by the " +
-                    "admin who also registered the corresponding gameserver.");
+
+        // In case of a service token used: verify it is the right service.
+        String callerRole = tokenController.currentUserRole().toString();
+        if (!callerRole.equals("[ROLE_ADMIN]")) {
+            if (!principal.getName().equals(gameServers.getRegistringServiceAccountForGame(gameservice)))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Savegames can only be deleted by the " +
+                        "service who also registered the corresponding gameserver.");
+        }
         try {
 
             verifyIsRegisteredGameService(gameservice);

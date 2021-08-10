@@ -85,6 +85,7 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User cannot be deleted. Does not exist.");
 
         // if user is admin, forbid self removal. (so there is always at least one admin around)
+        Player targetAccount = playerRepository.findById(name).get();
         String callerRole = tokenController.currentUserRole().toString();
         if (principal.getName().equals(name) && callerRole.equals("[ROLE_ADMIN]"))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Admins are not allowed to remove themselves.");
@@ -92,21 +93,22 @@ public class AccountController {
         // revoke active tokens of users in case they have not yet expired
         tokenController.revokeTokensByName(name);
 
-        // If account belongs to a service, remove all gameservers registered by that account. Cascades: also removes all sessions of the affected gameservers
-        if (callerRole.equals("[ROLE_SERVICE]"))
+        // If account (to be removed) belongs to a service, remove all gameservers registered by that account. Cascades: also removes all sessions of the affected gameservers
+        if (targetAccount.getRole().toString().contains("ROLE_SERVICE")) {
             try {
                 registryController.unregisterByService(name);
             } catch (RegistryException re) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Implicit of removal of associated games and sessions failed due to service identifier mismatch.");
             }
-
-        // If a player or admin: Remove player from all un-launched sessions where she is enrolled, but not the creator. Remove all other
-        // affected sessions and notify listeners and game-servers where required.
-        try {
-            sessionController.removePlayerFromAllSessions(name);
-        } catch (RegistryException re) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(re.getMessage());
-        } // delete user from database
+        } else {
+            // Else: account (to be removed) belongs to a player or admin: Remove player from all un-launched sessions where she is enrolled, but not the creator. Remove all other
+            // affected sessions and notify listeners and game-servers where required.
+            try {
+                sessionController.removePlayerFromAllSessions(name);
+            } catch (RegistryException re) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(re.getMessage());
+            } // delete user from database
+        }
         playerRepository.deleteById(name);
 
         return ResponseEntity.status(HttpStatus.OK).body(null);

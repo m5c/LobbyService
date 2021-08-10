@@ -16,9 +16,23 @@ function p2pmain {
         testMethod "$APIROOT/users/p2pa?access_token=$ADMINTOKEN" "200"
 
   # Create p2p user acount (p2pu)
-        TESTCOUNT="M.2"
+        TESTCOUNT="M.2a"
         ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"p2pu","password":"abc_123ABC123","preferredColour":"FF0000","role":"ROLE_PLAYER"}')
         testMethod "$APIROOT/users/p2pu?access_token=$ADMINTOKEN" "200"
+
+  # Create service user acount (service)
+        TESTCOUNT="M.2b"
+        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"service","password":"abc_123ABC123","preferredColour":"FFFFFF","role":"ROLE_SERVICE"}')
+        testMethod "$APIROOT/users/service?access_token=$ADMINTOKEN" "200"
+
+  # Get service token
+        TESTCOUNT="M.2c"
+        ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
+        testMethod "$TOKENROOT/token?grant_type=password&username=service&password=abc_123ABC123" "200"
+        assertexists "access_token" $PAYLOAD
+        SERVICETOKEN=$(echo $PAYLOAD | cut -c 18-45)
+        SERVICETOKEN=$(escapetoken $SERVICETOKEN)
+        echo "[DEBUG] Service-token: $SERVICETOKEN"
 
   # Get p2pa token
 	TESTCOUNT="M.3"
@@ -37,9 +51,9 @@ function p2pmain {
 	  # Get p2pu token
 	TESTCOUNT="M.5"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=maex&password=abc123" "200"
-	MAEXTOKEN=$(echo $PAYLOAD | cut -c 18-45)
-  MAEXTOKEN=$(escapetoken $MAEXTOKEN)
+	testMethod "$TOKENROOT/token?grant_type=password&username=joerg&password=abc123_ABC123" "200"
+	JOERGTOKEN=$(echo $PAYLOAD | cut -c 18-45)
+        JOERGTOKEN=$(escapetoken $JOERGTOKEN)
 
 	# Optional test cases for game-server registration with nonsense location
 	if [ -z $OPTIONAL ]; then
@@ -48,18 +62,18 @@ function p2pmain {
 		# Register p2p stub gameserver with "foobar" as IP [reject]
 		TESTCOUNT="O.1"
        		ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"p2p-phantom","displayName":"P2P Phantom","location":"foobar","minSessionPlayers":"2","maxSessionPlayers":"4", "webSupport":"false"}')
-        	testMethod "$APIROOT/gameservices/p2p-phantom?access_token=$P2PATOKEN" "400"		
+        	testMethod "$APIROOT/gameservices/p2p-phantom?access_token=$P2PATOKEN" "403"		
 
 		# Register p2p stub gameserver with whitespace " " [reject]
 		TESTCOUNT="O.2"
         	ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"p2p-phantom","displayName":"P2P Phantom","location":" ","minSessionPlayers":"2","maxSessionPlayers":"4", "webSupport":"false"}')
-        	testMethod "$APIROOT/gameservices/p2p-phantom?access_token=$P2PATOKEN" "400"		
+        	testMethod "$APIROOT/gameservices/p2p-phantom?access_token=$P2PATOKEN" "403"		
 	fi
 
 	# Register p2p stub gameserver without an IP [accept - considered a P2P phantom server]
 	TESTCOUNT="M.6"
         ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"name":"p2p-phantom","displayName":"P2P Phantom","location":"","minSessionPlayers":"2","maxSessionPlayers":"4", "webSupport":"false"}')
-        testMethod "$APIROOT/gameservices/p2p-phantom?access_token=$P2PATOKEN" "200"		
+        testMethod "$APIROOT/gameservices/p2p-phantom?access_token=$SERVICETOKEN" "200"		
 
 	# Optional test cases for p2p-session creation with nonsense client location
 	if [ -z $OPTIONAL ]; then
@@ -89,18 +103,18 @@ function p2pmain {
 	    # Join a session for the registered phantom server, without providing a client IP [reject]
             TESTCOUNT="O.5"
   	    ARGS=(-X PUT)
-            testMethod "$APIROOT/sessions/$SESSIONID/players/maex?access_token=$MAEXTOKEN" "400"
+            testMethod "$APIROOT/sessions/$SESSIONID/players/maex?access_token=$JOERGTOKEN" "400"
 
             # Join a session for the registered phantom server, with nonsense IP [reject]
             TESTCOUNT="0.6"
   	    ARGS=(-X PUT)
-            testMethod "$APIROOT/sessions/$SESSIONID/players/maex?access_token=$MAEXTOKEN&location=foobar" "400"
+            testMethod "$APIROOT/sessions/$SESSIONID/players/maex?access_token=$JOERGTOKEN&location=foobar" "400"
 	fi
 
         # join session with valid client IP
         TESTCOUNT="M.8"
         ARGS=(-X PUT)
-        testMethod "$APIROOT/sessions/$SESSIONID/players/maex?access_token=$MAEXTOKEN&location=127.0.0.2" "200"
+        testMethod "$APIROOT/sessions/$SESSIONID/players/joerg?access_token=$JOERGTOKEN&location=127.0.0.2" "200"
 
 	# Verify both client IPs appear in session details
         TESTCOUNT="M.9"
@@ -145,7 +159,7 @@ function p2pseq1 {
   # Request admin session token (needed to create p2pa / p2pu / registrations)
 	TESTCOUNT="1.1"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=admin&password=admin" "200"
+	testMethod "$TOKENROOT/token?grant_type=password&username=maex&password=abc123_ABC123" "200"
 	ADMINTOKEN=$(echo $PAYLOAD | cut -c 18-45)
 	ADMINTOKEN=$(escapetoken $ADMINTOKEN)
 
@@ -161,11 +175,16 @@ function p2pseq1 {
   testMethod "$APIROOT/users/p2pa?access_token=$ADMINTOKEN" "200"
 
    # Delete p2pu
-	TESTCOUNT="1.3"
+	TESTCOUNT="1.3a"
   ARGS=(-X DELETE)
   testMethod "$APIROOT/users/p2pu?access_token=$ADMINTOKEN" "200"
 
-  # Verify the phantom server is gone
+   # Delete service account
+	TESTCOUNT="1.3b"
+  ARGS=(-X DELETE)
+  testMethod "$APIROOT/users/service?access_token=$ADMINTOKEN" "200"
+
+  # Verify the phantom server is gone (cascade triggered by deletion of account used for service registration)
 	## get list of registered gameservers
 	TESTCOUNT="1.4"
 	ARGS=(-X GET)
@@ -220,6 +239,13 @@ function p2pseq2 {
 	TESTCOUNT="2.6"
   ARGS=(-X DELETE)
   testMethod "$APIROOT/users/p2pu?access_token=$ADMINTOKEN" "200"
+
+   # Delete service account
+	TESTCOUNT="2.7"
+  ARGS=(-X DELETE)
+  testMethod "$APIROOT/users/service?access_token=$ADMINTOKEN" "200"
+
+
 }
 
 # Third p2p sequence. Skips optionals in p2pmain function. Verifies no invalid IPs can be used for server / player registrations. Verifies absence of a serverIP enforces presence of a player IP (p2p mode) upon creation / join of a new session.

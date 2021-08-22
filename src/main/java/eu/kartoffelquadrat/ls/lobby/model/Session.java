@@ -4,15 +4,20 @@ import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
 import eu.kartoffelquadrat.ls.gameregistry.controller.LocationValidator;
 import eu.kartoffelquadrat.ls.gameregistry.model.GameServerParameters;
 import eu.kartoffelquadrat.ls.lobby.control.SessionException;
+import javax.persistence.*;
 
+import javax.persistence.Entity;
 import java.util.*;
 
 /**
  * Represents a session as maintained by the BGP. Sessions bind players together for a specific game. The lifecycle is
  * opened, launched, removed. OR opened, removed.
  */
+@Entity
 public class Session implements BroadcastContent {
 
+    @Id
+    private final long sessionId;
     private final GameServerParameters gameParameters;
     private final String creator;
     private final LinkedList<String> players;
@@ -27,10 +32,12 @@ public class Session implements BroadcastContent {
 
     /**
      * Constructor to create a standard session (not originating a savegame).
+     *
      * @param creator
      * @param gameParameters
      */
-    public Session(String creator, GameServerParameters gameParameters) {
+    public Session(long sessionId, String creator, GameServerParameters gameParameters) {
+        this.sessionId = sessionId;
         this.creator = creator;
         this.gameParameters = gameParameters;
         players = new LinkedList<>();
@@ -41,11 +48,13 @@ public class Session implements BroadcastContent {
 
     /**
      * Constructor to create a branded session from a savegame.
+     *
      * @param gameParameters
      * @param creator
      * @param savegameid
      */
-    public Session(String creator, GameServerParameters gameParameters, String savegameid) {
+    public Session(long sessionId, String creator, GameServerParameters gameParameters, String savegameid) {
+        this.sessionId = sessionId;
         this.gameParameters = gameParameters;
         this.creator = creator;
         this.players = new LinkedList<>();
@@ -56,16 +65,23 @@ public class Session implements BroadcastContent {
     }
 
     /**
+     * Default constructor required by spring-data, for bean reconstruction from DB.
+     */
+    protected Session() {
+    }
+
+    /**
      * Registers a player location (IP). Only relevant if the associated game server is registered as P2P phantom.
-     * @param player must be a registered player.
+     *
+     * @param player   must be a registered player.
      * @param location must be a valid IP address.
      */
     public void addPlayerLocation(String player, String location) throws SessionException {
 
-        if(!players.contains(player))
+        if (!players.contains(player))
             throw new SessionException("Player locator can not be added. The player is not registered to this session.");
 
-        if(!LocationValidator.isValidClientLocation(location))
+        if (!LocationValidator.isValidClientLocation(location))
             throw new SessionException("Player locator can not be added. The provided location is not a valid IP address.");
 
         playerLocations.put(player, location);
@@ -104,7 +120,7 @@ public class Session implements BroadcastContent {
     }
 
     public void removePlayer(String player) {
-        if(!players.contains(player))
+        if (!players.contains(player))
             throw new RuntimeException("Player can not be removed, because she is not registered to the session.");
         players.remove(player);
     }

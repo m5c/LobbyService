@@ -117,7 +117,7 @@ public class SessionController {
         // Standard case, just a new session. Create it, index it.
         String savegameid = createGameForm.getSavegame();
         if (savegameid.trim().isEmpty())
-            session = new Session(creator, gameParameters, savegameid);
+            session = new Session(sessionId, creator, gameParameters, savegameid);
         else {
             // Session is created from a savegame...
             String gameservice = createGameForm.getGame();
@@ -132,7 +132,7 @@ public class SessionController {
 
                 // Create a new session, with parameter from savegame (player amount, game kind)
                 GameServerParameters brandedParams = gameParameters.getPlayerBrandedCopy(savegame.getPlayers().length);
-                session = new Session(creator, brandedParams, createGameForm.getSavegame());
+                session = new Session(sessionId, creator, brandedParams, createGameForm.getSavegame());
 
             } catch (SavegameException | SessionException se) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(se.getMessage());

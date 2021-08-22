@@ -77,7 +77,7 @@ public class AccountController {
      * @param name as the username of the user-record to be deleted
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_PLAYER','ROLE_ADMIN')")
     @DeleteMapping("/api/users/{name}")
     public ResponseEntity deleteAccount(@PathVariable String name, Principal principal) {
 

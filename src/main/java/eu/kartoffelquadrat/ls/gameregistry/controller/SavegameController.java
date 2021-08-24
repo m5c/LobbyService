@@ -5,12 +5,14 @@ import eu.kartoffelquadrat.ls.accountmanager.model.PlayerRepository;
 import eu.kartoffelquadrat.ls.gameregistry.model.GameServerParameters;
 import eu.kartoffelquadrat.ls.gameregistry.model.GameServers;
 import eu.kartoffelquadrat.ls.lobby.control.SessionController;
+import eu.kartoffelquadrat.ls.lobby.model.SessionRepository;
 import eu.kartoffelquadrat.ls.lobby.model.Sessions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.security.Principal;
 import java.util.Collection;
@@ -30,7 +32,8 @@ public class SavegameController {
     PlayerRepository playerRepository;
 
     @Autowired
-    Sessions sessions;
+    SessionRepository sessionRepository;
+    //Sessions sessions;
 
     @Autowired
     SessionController sessionController;

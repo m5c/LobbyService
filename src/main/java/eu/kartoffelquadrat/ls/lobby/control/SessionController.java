@@ -7,10 +7,7 @@ import eu.kartoffelquadrat.ls.accountmanager.model.PlayerRepository;
 import eu.kartoffelquadrat.ls.gameregistry.controller.*;
 import eu.kartoffelquadrat.ls.gameregistry.model.GameServerParameters;
 import eu.kartoffelquadrat.ls.gameregistry.model.GameServers;
-import eu.kartoffelquadrat.ls.lobby.model.LauncherInfo;
-import eu.kartoffelquadrat.ls.lobby.model.PlayerInfo;
-import eu.kartoffelquadrat.ls.lobby.model.Sessions;
-import eu.kartoffelquadrat.ls.lobby.model.Session;
+import eu.kartoffelquadrat.ls.lobby.model.*;
 import kong.unirest.Unirest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +32,9 @@ import java.util.Map.Entry;
 public class SessionController {
 
 
-    // Note: Ideally this object is loaded from a DB on service startup. For now it is created empty and within memory.
-    Sessions sessions;
+    @Autowired
+    //Sessions sessions;
+    SessionRepository sessionRepository;
 
     @Value("${long.poll.timeout}")
     int longPollTimeout;

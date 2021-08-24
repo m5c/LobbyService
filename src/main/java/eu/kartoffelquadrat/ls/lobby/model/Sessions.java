@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
+ * TODO: get rid of this class. Is replaced by SessionRepository.
  * In memory data layout of lobby service. There should be only one entity of this class.
  *
  * @author Maximilian Schiedermeier, August 2020
@@ -25,7 +26,7 @@ public class Sessions implements BroadcastContent {
     }
 
     /**
-     * We explicitly also want to propagate updates of "no-available" sessions. Therefore we always return "false" here,
+     * We explicitly also want to propagate updates of "zero-available" sessions. Therefore we always return "false" here,
      * to override the ARL's "isEmpty" check.
      *
      * @return

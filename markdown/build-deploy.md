@@ -35,7 +35,7 @@ The LS requires preconfigured database before it can be powered up. This is requ
 
 ### Database
 
-The recommended setup is a dockerized mySQL db setup. Setup scripts for a [native mySQL DB](../ls-db-setup.sql) or [native Dervy DB](ls-derby-setup.sql) are provided as fallbacks, but require carefull selection of the [LS build profile](#lobby-service)
+The recommended setup is a dockerized mySQL db setup. Scripts for a [native mySQL DB](../ls-db-setup.sql) or [native Derby DB](ls-derby-setup.sql) are provided as fallbacks, but require careful selection of the [appropriate LS build profile](#lobby-service).
 
 Dockerized DB setup:
 

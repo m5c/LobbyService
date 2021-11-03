@@ -47,8 +47,8 @@ The LS comes with a build-in DB-persisted user management. The LS identifies use
 
 The LS comes with 5 built-in users:
  * A default administrator, which can be used create new custom users / administrators:
-   * Identifier: ```admin```
-   * Password ```admin```
+   * Identifier: ```maex```
+   * Password ```abc123_ABC123```
  * The 5 built-in users should not be altered on dev systems, because they are needed for unit-testing.
  
   > *Note: User deletion can have side effects, such as the implicit removal of games / sessions where a player participated, as well as the removal of game-services registered by a deleted administrator.* 

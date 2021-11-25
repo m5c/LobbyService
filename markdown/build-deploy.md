@@ -4,10 +4,7 @@ How to run the LS on your system.
 
 ## About
 
-This section explains how to set up the Lobby Service on your system, using *Docker*. At the end you will find instructions for advanced users on how to integrate a gameserver into a prepared *docker-compose* configuration. 
-
- * [Standard setup, using Docker](#standard-setup)
- * [Full Microservice setup, using Docker-Compose](#advanced-setup)
+This section explains how to set up the Lobby Service on your system, using *Maven* and *Docker*.
 
 ### Preliminary steps
 

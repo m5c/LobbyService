@@ -189,7 +189,7 @@ Note: ```oldPassword``` is not verified if the request was authorized by an admi
         ```  
         *Note: If the server registration occurred in phantom (p2p) mode, the location string is empty. Instead, the location of all clients is then maintained per session.*
    * **PUT**: Registers a new Game-Service at the LS.
-     * Request-Parameters: ```access_token=...``` (admin role required)
+     * Request-Parameters: ```access_token=...``` (service role required)
      * Header-Parameters: ```Content-Type: application/json```
      * Request-Body:  
         ```json
@@ -208,7 +208,7 @@ Note: ```oldPassword``` is not verified if the request was authorized by an admi
         curl -X PUT --header 'Content-Type: application/json' --data '{"name":"DummyGame1","displayName":"Dummy Game 1","location":"http://127.0.0.1:4243/DummyGameService","minSessionPlayers":"3","maxSessionPlayers":"5", "webSupport":"true"}' http://127.0.0.1:4242/api/gameservices/DummyGame1?access_token=dA/1to5bFiRvqTem0eiUzY2FITw=
         ``` 
    * **DELETE**: Removes a previously registered gameservice. Implicitly removes all corresponding savegames and sessions. Also sends a [quit request](...) to all affected running sessions.
-     * Request-Parameters: ```access_token=...``` (admin role required. Must match admin who registered the service.)
+     * Request-Parameters: ```access_token=...``` (admin role or matching service role required.)
      * Curl:  
         ```
         curl -X DELETE http://127.0.0.1:4242/api/gameservices/DummyGame1?access_token=BRReiLGVvB6C9vSX%2BBUMvxomveg=

@@ -110,19 +110,19 @@ public class GameServerParameters {
     public void validate() throws RegistryException {
         StringBuilder problems = new StringBuilder("");
 
-        if (name.trim().isEmpty())
-            problems.append("Name must not be only whitespaces.");
-        if (displayName.trim().isEmpty())
-            problems.append("Display-Name must not be only whitespaces.");
-        if(!displayName.trim().equals(displayName))
-            problems.append("Provided DisplayName must not contain leading or trailing whitespaces.");
-        if (!location.isEmpty() && !LocationValidator.isValidGameServiceLocation(location))
+        if (name == null || name.trim().isEmpty())
+            problems.append("Name must not be only whitespaces. ");
+        if (displayName == null || displayName.trim().isEmpty())
+            problems.append("Display-Name must not be only whitespaces. ");
+        if(displayName == null || !displayName.trim().equals(displayName))
+            problems.append("Provided DisplayName must not contain leading or trailing whitespaces. ");
+        if (location == null || !location.isEmpty() && !LocationValidator.isValidGameServiceLocation(location))
             problems.append("Location must be either empty (P2P mode) or contain a valid IP+Port. ");
         if (minSessionPlayers > MAX_LS_GAME_PLAYERS || minSessionPlayers < MIN_LS_GAME_PLAYERS)
             problems.append("Minimum amount of players out of bound. Valid values are within [2..6]. ");
         if (maxSessionPlayers > MAX_LS_GAME_PLAYERS || maxSessionPlayers < MIN_LS_GAME_PLAYERS)
             problems.append("Maximum amount of players out of bound. Valid values are within [2..6]. ");
-        if (!webSupport.equals("true") && !webSupport.equals("false"))
+        if (webSupport == null || !webSupport.equals("true") && !webSupport.equals("false"))
             problems.append("WebSupport must encode a boolean value. ");
 
         if (!problems.toString().isEmpty())

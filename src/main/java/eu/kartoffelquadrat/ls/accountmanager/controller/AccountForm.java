@@ -80,7 +80,7 @@ public class AccountForm {
 
     public static boolean validatePasswordString(String password)
     {
-        return Pattern.compile("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}").matcher(password).find();
+        return Pattern.compile("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,32}").matcher(password).find();
     }
 
     public static boolean validateColourString(String colourString)

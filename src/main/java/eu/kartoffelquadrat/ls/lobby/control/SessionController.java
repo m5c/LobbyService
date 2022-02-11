@@ -428,7 +428,7 @@ public class SessionController {
     }
 
     /**
-     * Creates a reandom session ID that is not yet in use.
+     * Creates a random session ID that is not yet in use.
      */
     private long generateUniqueSessionId() {
         long randomSessionId = Math.abs(new Random().nextLong());

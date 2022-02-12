@@ -220,7 +220,7 @@ Note: ```oldPassword``` is not verified if the request was authorized by an admi
 [[Download sample ARC configuration](arc/ls-sessions.arc)]
 
  * /api/sessions
-   * GET: Retrieves details on all sessions. Clients can send a hash of the previous respnse payload, to advised the LS to withhold reply until a relevant update or timeout occurred.
+   * GET: Retrieves details on all sessions. Clients can send a hash of the previous response payload, to advised the LS to withhold reply until a relevant update or timeout occurred.
      * Request-Parameters: *```hash=...```* (enables [long-polling](https://github.com/kartoffelquadrat/AsyncRestLib#client-long-poll-counterpart))
      * Curl:  
         ```

@@ -128,7 +128,7 @@
                             "type": "raw",
                             "viewModel": [
                                 {
-                                    "value": "{\n    \"location\": \"http://127.0.0.1:4243/DummyGameService\",\n    \"maxSessionPlayers\": \"5\",\n    \"minSessionPlayers\": \"3\",\n    \"name\": \"DummyGame2\",\n    \"displayName\": \"My second dummy game. YOLO.\",\n    \"webSupport\": \"true\"\n}"
+                                    "value": "{\n    \"location\": \"http://127.0.0.1:4243/DummyGameService\",\n    \"maxSessionPlayers\": 5,\n    \"minSessionPlayers\": 3,\n    \"name\": \"DummyGame2\",\n    \"displayName\": \"My second dummy game. YOLO.\",\n    \"webSupport\": \"true\"\n}"
                                 }
                             ]
                         }

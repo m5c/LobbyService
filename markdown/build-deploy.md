@@ -68,7 +68,7 @@ mysql -h 127.0.0.1 -P 3453 --protocol=tcp -u ls -pphaibooth3sha6Hi
 
  > Note: Above command verifies if the DB is reachable from your host system. Therefore you want to run the command on your regular command-line, *not* on a container-internal shell.
 
- * Verify the LS is running and refelcts the DB state:
+ * Verify the LS is running and reflects DB state:
    * Open a browser
    * Visit [http://127.0.0.1:4242/api/online](http://127.0.0.1:4242/api/online)  
 You should see ```Lobby-Service platform is happily serving X users.```

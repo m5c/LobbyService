@@ -34,6 +34,8 @@ The following syntax is used:
  * Methods that require full authentication by OAuth2-token are printed **bold**.
  * Optional URL-, Header- or Body-parameters are printed *italic* 
 
+ > **Note**: OAuth2 tokens often contain one or multiple "```+```" signs. If you transmit an OAuth2 token via URL-encoding, e.g. for method authentication, you must escape all occurrences of ```+``` to the URL-encoded representation: ```%2B```. Otherwise your token is not recognized and the associated request will be answered with a [```403``` (forbidden) HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403).
+
 ---
 ### Debugging
 

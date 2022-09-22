@@ -39,7 +39,7 @@ Dockerized DB setup:
  * Create a docker container from the provided ```Dockerfile```. 
  ```bash
   docker build -t "ls-db:Dockerfile" . -f Dockerfile-ls-db
-  docker run --name=ls-db -p 3453:3306 -d ls-db:Dockerfile
+  docker run --platform linux/x86_64 --name=ls-db -p 3453:3306 -d ls-db:Dockerfile 
  ```
  
  > Note: Creation and deployment by Dockerfile is only required the first time!  

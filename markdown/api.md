@@ -21,10 +21,8 @@ Quick navigation:
 
 The "[Advanced Rest Client](https://install.advancedrestclient.com/install)" is a tool for convenient REST API test access and code generators for various programming languages. All major platforms and [a browser plugin](https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo) are supported.
 
- * Prepared ARC filed can be download in the individual sections below.
- * To import an ARC file, open the "APIs" tab, then drop the file on the left panel.
-
-![arcimport](images/arcimport.png)
+ * Prepared ARC filed can be download in the individual sections below. View as RAW and safe to a ```*.arc``` file on your disk.
+ * To import an ARC file, open the ARC program, then use the ```File -> Import Data...``` menu. Then select your ARC file.
 
 ## Access Details
 

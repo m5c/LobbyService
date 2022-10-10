@@ -458,7 +458,7 @@ Optional, for P2P clients: ```location=___.___.___.___``` (must be a valid IP ad
      * Request-Parameters: ```access_token=...```
      * Curl:  
         ```
-        curl -X DELETE http://127.0.0.1:4242/oauth/DELETE?access_token=37S8hhdMCdXupIatPm82xJpXXas=
+        curl -X DELETE http://127.0.0.1:4242/oauth/active?access_token=37S8hhdMCdXupIatPm82xJpXXas=
         ```
 
 

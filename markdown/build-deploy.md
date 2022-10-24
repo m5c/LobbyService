@@ -45,10 +45,7 @@ Dockerized DB setup:
  > Note: Creation and deployment by Dockerfile is only required the first time!  
  Use ```docker start ls-db``` from here on.
 
- > **Linux Compatibility**: Docker MySQL container on Fedora is [suspect to saturate RAM](https://github.com/docker-library/mysql/issues/579#issuecomment-519495808). To set boundary, use ```--ulimit``` flag: to the run command like so:  
-```
-docker run --ulimit nofile=262144:262144 --platform linux/x86_64 --name=ls-db -p 3453:3306 -d ls-db:Dockerfile
-```
+ > **Linux Compatibility**: Docker MySQL container on Fedora is [suspect to saturate RAM](https://github.com/docker-library/mysql/issues/579#issuecomment-519495808). To set boundary, use ```--ulimit``` flag:  ```docker run --ulimit nofile=262144:262144 --platform linux/x86_64 --name=ls-db -p 3453:3306 -d ls-db:Dockerfile```
 
 ### Lobby Service
 

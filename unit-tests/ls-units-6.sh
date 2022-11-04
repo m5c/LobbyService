@@ -51,9 +51,9 @@ function p2pmain {
 	  # Get p2pu token
 	TESTCOUNT="M.5"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=joerg&password=abc123_ABC123" "200"
-	JOERGTOKEN=$(echo $PAYLOAD | cut -c 18-45)
-        JOERGTOKEN=$(escapetoken $JOERGTOKEN)
+	testMethod "$TOKENROOT/token?grant_type=password&username=linus&password=abc123_ABC123" "200"
+	LINUSTOKEN=$(echo $PAYLOAD | cut -c 18-45)
+        LINUSTOKEN=$(escapetoken $LINUSTOKEN)
 
 	# Optional test cases for game-server registration with nonsense location
 	if [ -z $OPTIONAL ]; then
@@ -103,18 +103,18 @@ function p2pmain {
 	    # Join a session for the registered phantom server, without providing a client IP [reject]
             TESTCOUNT="O.5"
   	    ARGS=(-X PUT)
-            testMethod "$APIROOT/sessions/$SESSIONID/players/maex?access_token=$JOERGTOKEN" "400"
+            testMethod "$APIROOT/sessions/$SESSIONID/players/maex?access_token=$LINUSTOKEN" "400"
 
             # Join a session for the registered phantom server, with nonsense IP [reject]
             TESTCOUNT="0.6"
   	    ARGS=(-X PUT)
-            testMethod "$APIROOT/sessions/$SESSIONID/players/maex?access_token=$JOERGTOKEN&location=foobar" "400"
+            testMethod "$APIROOT/sessions/$SESSIONID/players/maex?access_token=$LINUSTOKEN&location=foobar" "400"
 	fi
 
         # join session with valid client IP
         TESTCOUNT="M.8"
         ARGS=(-X PUT)
-        testMethod "$APIROOT/sessions/$SESSIONID/players/joerg?access_token=$JOERGTOKEN&location=127.0.0.2" "200"
+        testMethod "$APIROOT/sessions/$SESSIONID/players/linus?access_token=$LINUSTOKEN&location=127.0.0.2" "200"
 
 	# Verify both client IPs appear in session details
         TESTCOUNT="M.9"

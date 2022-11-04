@@ -58,9 +58,9 @@ function apiTestSequence5 {
   # Request player session token (needed to test access on registration)
 	TESTCOUNT="1.3"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=joerg&password=abc123_ABC123" "200"
-	JOERGTOKEN=$(echo $PAYLOAD | cut -c 18-45)
-	JOERGTOKEN=$(escapetoken $JOERGTOKEN)
+	testMethod "$TOKENROOT/token?grant_type=password&username=linus&password=abc123_ABC123" "200"
+	LINUSTOKEN=$(echo $PAYLOAD | cut -c 18-45)
+	LINUSTOKEN=$(escapetoken $LINUSTOKEN)
 
   # Register gameserver
 	TESTCOUNT="1.4"
@@ -93,19 +93,19 @@ function apiTestSequence5 {
 # 2. Sane registration
   # Register a dummy savegame for that gameserver
 	TESTCOUNT="2.1"
-        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"players":["maex", "ryan"], "gamename":"DummyGame1", "savegameid":"XYZ42"}')
+        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"players":["maex", "marianick"], "gamename":"DummyGame1", "savegameid":"XYZ42"}')
         testMethod "$APIROOT/gameservices/DummyGame1/savegames/XYZ42?access_token=$SERVICETOKEN" "200"
 
   # Verify the total list of savegames now contains the test savegame
 	TESTCOUNT="2.2"
 	ARGS=(-X GET)
-	testMethod "$APIROOT/gameservices/DummyGame1/savegames?access_token=$JOERGTOKEN" "200"
+	testMethod "$APIROOT/gameservices/DummyGame1/savegames?access_token=$LINUSTOKEN" "200"
 	assertexists XYZ42 $PAYLOAD
 
   # Verify the access of a non-existing savegame is now granted
 	TESTCOUNT="2.3"
 	ARGS=(-X GET)
-	testMethod "$APIROOT/gameservices/DummyGame1/savegames/XYZ42?access_token=$JOERGTOKEN" "200"
+	testMethod "$APIROOT/gameservices/DummyGame1/savegames/XYZ42?access_token=$LINUSTOKEN" "200"
 	assertexists XYZ42 $PAYLOAD
 	
   # Manually remove the registrated savegame again (accepted, admin)
@@ -127,7 +127,7 @@ function apiTestSequence5 {
 # Illegal registrations (all reject)
   # Register a savegame as admin, but using an admin account [reject]
 	TESTCOUNT="3.1"
-        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"players":["maex", "ryan"], "gamename":"DummyGame1", "savegameid":"XYZ42"}')
+        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"players":["maex", "marianick"], "gamename":"DummyGame1", "savegameid":"XYZ42"}')
         testMethod "$APIROOT/gameservices/DummyGame1/savegames/XYZ42?access_token=$ADMINTOKEN5" "403"
 
   # Register a savegame as admin, but use a non existent player
@@ -137,14 +137,14 @@ function apiTestSequence5 {
 
   # Register a savegame as admin, but use a non existent game server
 	TESTCOUNT="3.3"
-        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"players":["maex", "ryan"], "gamename":"DummyGame1", "savegameid":"XYZ42"}')
+        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"players":["maex", "marianick"], "gamename":"DummyGame1", "savegameid":"XYZ42"}')
         testMethod "$APIROOT/gameservices/DummyGame2/savegames/XYZ42?access_token=$ADMINTOKEN" "403"
 
   # Double register a savegame, using a colliding savegame id
 	TESTCOUNT="3.4"
-        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"players":["maex", "ryan"], "gamename":"DummyGame1", "savegameid":"XYZ42"}')
+        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"players":["maex", "marianick"], "gamename":"DummyGame1", "savegameid":"XYZ42"}')
         testMethod "$APIROOT/gameservices/DummyGame1/savegames/XYZ42?access_token=$SERVICETOKEN" "200"
-        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"players":["maex", "ryan"], "gamename":"DummyGame1", "savegameid":"XYZ42"}')
+        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"players":["maex", "marianick"], "gamename":"DummyGame1", "savegameid":"XYZ42"}')
         testMethod "$APIROOT/gameservices/DummyGame1/savegames/XYZ42?access_token=$SERVICETOKEN" "400"
 
   # Manually remove the registrated savegame again
@@ -167,13 +167,13 @@ function apiTestSequence5 {
 # Sessions from savegames (ok)
   # Create a savegame that can be turned into a session
 	TESTCOUNT="4.1"
-        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"players":["maex", "ryan", "hyacinth"], "gamename":"DummyGame1", "savegameid":"XYZ42"}')
+        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"players":["maex", "marianick", "khabiir"], "gamename":"DummyGame1", "savegameid":"XYZ42"}')
         testMethod "$APIROOT/gameservices/DummyGame1/savegames/XYZ42?access_token=$SERVICETOKEN" "200"
 
   # Create a session from a previously created savegame
 	TESTCOUNT="4.2"
-	ARGS=(-X POST --header 'Content-Type: application/json' --data '{"game":"DummyGame1", "creator":"joerg", "savegame":"XYZ42"}')
-	testMethod "$APIROOT/sessions?access_token=$JOERGTOKEN" "200"
+	ARGS=(-X POST --header 'Content-Type: application/json' --data '{"game":"DummyGame1", "creator":"linus", "savegame":"XYZ42"}')
+	testMethod "$APIROOT/sessions?access_token=$LINUSTOKEN" "200"
 
   # Verify the session is listed, verify ID is stored, verify playeramount is fixed to 3
 	TESTCOUNT="4.3"
@@ -187,23 +187,23 @@ function apiTestSequence5 {
 	# extract the sessionid
 	SESSIONID=$(echo $PAYLOAD | cut -d\" -f 4)
 
-  # Get session tokens for ryan, joerg, hyacinth, so the session can be joined
+  # Get session tokens for marianick, linus, khabiir, so the session can be joined
 	TESTCOUNT="4.4"
         ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-        testMethod "$TOKENROOT/token?grant_type=password&username=ryan&password=abc123_ABC123" "200"
+        testMethod "$TOKENROOT/token?grant_type=password&username=marianick&password=abc123_ABC123" "200"
 	USERTOKEN2=$(echo $PAYLOAD | cut -c 18-45)
 	USERTOKEN2=$(escapetoken $USERTOKEN2)
 	TESTCOUNT="4.5"
-        testMethod "$TOKENROOT/token?grant_type=password&username=hyacinth&password=abc123_ABC123" "200"
+        testMethod "$TOKENROOT/token?grant_type=password&username=khabiir&password=abc123_ABC123" "200"
 	USERTOKEN3=$(echo $PAYLOAD | cut -c 18-45)
 	USERTOKEN3=$(escapetoken $USERTOKEN3)
 
   # Join the session (3rd join must be rejected)
 	TESTCOUNT="4.7"
         ARGS=(-X PUT)
-        testMethod "$APIROOT/sessions/$SESSIONID/players/ryan?access_token=$USERTOKEN2" "200"
+        testMethod "$APIROOT/sessions/$SESSIONID/players/marianick?access_token=$USERTOKEN2" "200"
 	TESTCOUNT="4.8"
-        testMethod "$APIROOT/sessions/$SESSIONID/players/hyacinth?access_token=$USERTOKEN3" "200"
+        testMethod "$APIROOT/sessions/$SESSIONID/players/khabiir?access_token=$USERTOKEN3" "200"
 # TODO: add a third join, must lead to 400
 	
 # Remove registration of game-server "DummyGame1"
@@ -233,13 +233,13 @@ function apiTestSequence5 {
 	
 	# register a savegame for the gameserver
 	TESTCOUNT="5.2"
-        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"players":["maex", "ryan", "hyacinth"], "gamename":"DummyGame1", "savegameid":"XYZ42"}')
+        ARGS=(-X PUT --header 'Content-Type: application/json' --data '{"players":["maex", "marianick", "khabiir"], "gamename":"DummyGame1", "savegameid":"XYZ42"}')
         testMethod "$APIROOT/gameservices/DummyGame1/savegames/XYZ42?access_token=$SERVICETOKEN" "200"
 
         # Create a session from the savegame
 	TESTCOUNT="5.3"
-	ARGS=(-X POST --header 'Content-Type: application/json' --data '{"game":"DummyGame1", "creator":"joerg", "savegame":"XYZ42"}')
-	testMethod "$APIROOT/sessions?access_token=$JOERGTOKEN" "200"
+	ARGS=(-X POST --header 'Content-Type: application/json' --data '{"game":"DummyGame1", "creator":"linus", "savegame":"XYZ42"}')
+	testMethod "$APIROOT/sessions?access_token=$LINUSTOKEN" "200"
 
 	# Extract the sessionid
 	TESTCOUNT="5.3"
@@ -250,21 +250,21 @@ function apiTestSequence5 {
 	# Join the session, so it can be launched
 	TESTCOUNT="5.4"
         ARGS=(-X PUT)
-        testMethod "$APIROOT/sessions/$SESSIONID/players/ryan?access_token=$USERTOKEN2" "200"
+        testMethod "$APIROOT/sessions/$SESSIONID/players/marianick?access_token=$USERTOKEN2" "200"
 
 	# Launch the session when there are not enough players (reject)
         TESTCOUNT="5.5"
         ARGS=(-X POST)
-        testMethod "$APIROOT/sessions/$SESSIONID?access_token=$JOERGTOKEN" "400"	
+        testMethod "$APIROOT/sessions/$SESSIONID?access_token=$LINUSTOKEN" "400"	
 
 	TESTCOUNT="5.6"
         ARGS=(-X PUT)
-        testMethod "$APIROOT/sessions/$SESSIONID/players/hyacinth?access_token=$USERTOKEN3" "200"
+        testMethod "$APIROOT/sessions/$SESSIONID/players/khabiir?access_token=$USERTOKEN3" "200"
 
 	# Launch the sessions (success)
         TESTCOUNT="5.7"
         ARGS=(-X POST)
-        testMethod "$APIROOT/sessions/$SESSIONID?access_token=$JOERGTOKEN" "200"	
+        testMethod "$APIROOT/sessions/$SESSIONID?access_token=$LINUSTOKEN" "200"	
 
 
 if [ ! -z "$INTERLEAVED" ]; then

@@ -37,10 +37,10 @@ function launchPreparation {
         testMethod "$APIROOT/sessions" "200"
 	SESSIONID=$(echo $PAYLOAD | cut -d\" -f 4)
 
-	# Join the session as ryan
+	# Join the session as marianick
         TESTCOUNT="LP.5"
         ARGS=(-X PUT)
-        testMethod "$APIROOT/sessions/$SESSIONID/players/ryan?access_token=$USERTOKEN2" "200"
+        testMethod "$APIROOT/sessions/$SESSIONID/players/marianick?access_token=$USERTOKEN2" "200"
 }
 
 function cleanup {
@@ -93,7 +93,7 @@ function mainpath {
   # 2.2 request a user token
 	TESTCOUNT="2.3"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=hyacinth&password=abc123_ABC123" "200"
+	testMethod "$TOKENROOT/token?grant_type=password&username=khabiir&password=abc123_ABC123" "200"
 	USERTOKEN=$(echo $PAYLOAD | cut -c 18-45)
 	USERTOKEN=$(escapetoken $USERTOKEN)
 	echo "[DEBUG] User-token: $USERTOKEN"
@@ -101,7 +101,7 @@ function mainpath {
   # 2.2 request a second user token
 	TESTCOUNT="2.4"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=ryan&password=abc123_ABC123" "200"
+	testMethod "$TOKENROOT/token?grant_type=password&username=marianick&password=abc123_ABC123" "200"
 	USERTOKEN2=$(echo $PAYLOAD | cut -c 18-45)
 	USERTOKEN2=$(escapetoken $USERTOKEN2)
 	echo "[DEBUG] User-token 2: $USERTOKEN2"
@@ -109,7 +109,7 @@ function mainpath {
   # 2.2 request a third user token
 	TESTCOUNT="2.5"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=joerg&password=abc123_ABC123" "200"
+	testMethod "$TOKENROOT/token?grant_type=password&username=linus&password=abc123_ABC123" "200"
 	USERTOKEN3=$(echo $PAYLOAD | cut -c 18-45)
 	USERTOKEN3=$(escapetoken $USERTOKEN3)
 	echo "[DEBUG] User-token 2: $USERTOKEN3"
@@ -143,7 +143,7 @@ function mainpath {
 
   # 3.4 try to create a session in the name of someone else (reject)
         TESTCOUNT="3.4"
-	ARGS=(-X POST --header 'Content-Type: application/json' --data '{"game":"DummyGame1", "creator":"ryan", "savegame":""}')
+	ARGS=(-X POST --header 'Content-Type: application/json' --data '{"game":"DummyGame1", "creator":"marianick", "savegame":""}')
 	testMethod "$APIROOT/sessions?access_token=$USERTOKEN" "400"	
 
   # 3.5 Verify dummy game does not yet show up in list of open sessions
@@ -157,7 +157,7 @@ function mainpath {
 
   # 3.6 create a session
         TESTCOUNT="3.6"
-	ARGS=(-X POST --header 'Content-Type: application/json' --data '{"game":"DummyGame1", "creator":"hyacinth", "savegame":""}')
+	ARGS=(-X POST --header 'Content-Type: application/json' --data '{"game":"DummyGame1", "creator":"khabiir", "savegame":""}')
 	testMethod "$APIROOT/sessions?access_token=$USERTOKEN" "200"	
 
   # 3.7 Verify dummy game shows up in list of open sessions
@@ -194,51 +194,51 @@ function mainpath {
   # 5.1 join the game so there are enough players (reject, on behalf of so else)
         TESTCOUNT="5.1"
 	ARGS=(-X PUT)
-	testMethod "$APIROOT/sessions/$SESSIONID/players/ryan?access_token=$USERTOKEN" "400"	
+	testMethod "$APIROOT/sessions/$SESSIONID/players/marianick?access_token=$USERTOKEN" "400"	
 
   # 5.2 join the game so there are enough players
         TESTCOUNT="5.2"
 	ARGS=(-X PUT)
-	testMethod "$APIROOT/sessions/$SESSIONID/players/ryan?access_token=$USERTOKEN2" "200"	
+	testMethod "$APIROOT/sessions/$SESSIONID/players/marianick?access_token=$USERTOKEN2" "200"	
 
   # 5.3 verify the players registered to the game
         TESTCOUNT="5.3"
 	ARGS=(-X GET)
 	testMethod "$APIROOT/sessions/$SESSIONID" "200"	
-	assertexists "hyacinth" $PAYLOAD
-	assertexists "ryan" $PAYLOAD
+	assertexists "khabiir" $PAYLOAD
+	assertexists "marianick" $PAYLOAD
 
   # 5.4 join the game so there are enough players (reject, game full)
         TESTCOUNT="5.4"
 	ARGS=(-X PUT)
-	testMethod "$APIROOT/sessions/$SESSIONID/players/joerg?access_token=$USERTOKEN3" "400"	
+	testMethod "$APIROOT/sessions/$SESSIONID/players/linus?access_token=$USERTOKEN3" "400"	
 
   # 5.5 leave the game again (reject, on behalf of so else)
         TESTCOUNT="5.5"
 	ARGS=(-X DELETE)
-	testMethod "$APIROOT/sessions/$SESSIONID/players/ryan?access_token=$USERTOKEN3" "400"	
+	testMethod "$APIROOT/sessions/$SESSIONID/players/marianick?access_token=$USERTOKEN3" "400"	
 
   # 5.6 leave the game again (success)
         TESTCOUNT="5.6"
 	ARGS=(-X DELETE)
-	testMethod "$APIROOT/sessions/$SESSIONID/players/ryan?access_token=$USERTOKEN2" "200"	
+	testMethod "$APIROOT/sessions/$SESSIONID/players/marianick?access_token=$USERTOKEN2" "200"	
 
   # 5.7 leave the game as creator (reject)
         TESTCOUNT="5.7"
 	ARGS=(-X DELETE)
-	testMethod "$APIROOT/sessions/$SESSIONID/players/hyacinth?access_token=$USERTOKEN" "400"	
+	testMethod "$APIROOT/sessions/$SESSIONID/players/khabiir?access_token=$USERTOKEN" "400"	
 
   # 5.8 join the game again, with the other player, so there are enough players for the game to be launched.
         TESTCOUNT="5.8"
 	ARGS=(-X PUT)
-	testMethod "$APIROOT/sessions/$SESSIONID/players/joerg?access_token=$USERTOKEN3" "200"	
+	testMethod "$APIROOT/sessions/$SESSIONID/players/linus?access_token=$USERTOKEN3" "200"	
 	
   # 5.9 verify the players registered to the game
         TESTCOUNT="5.9"
 	ARGS=(-X GET)
 	testMethod "$APIROOT/sessions/$SESSIONID" "200"	
-	assertexists "hyacinth" $PAYLOAD
-	assertexists "joerg" $PAYLOAD
+	assertexists "khabiir" $PAYLOAD
+	assertexists "linus" $PAYLOAD
 
 ## Launch and terminate
 
@@ -354,7 +354,7 @@ function sidepath3
   # 8.1 remove Ryan from the session (do not want to delete a built in user)
         TESTCOUNT="8.1"
 	ARGS=(-X DELETE)
-	testMethod "$APIROOT/sessions/$SESSIONID/players/ryan?access_token=$USERTOKEN2" "200"	
+	testMethod "$APIROOT/sessions/$SESSIONID/players/marianick?access_token=$USERTOKEN2" "200"	
 	
   # 8.2 create a new dummy player (Bar), get her token
 	TESTCOUNT="8.2"
@@ -413,7 +413,7 @@ function sidepath4
   # 9.1 remove Ryan from the session (do not want to delete a built in user)
         TESTCOUNT="9.1"
 	ARGS=(-X DELETE)
-	testMethod "$APIROOT/sessions/$SESSIONID/players/ryan?access_token=$USERTOKEN2" "200"	
+	testMethod "$APIROOT/sessions/$SESSIONID/players/marianick?access_token=$USERTOKEN2" "200"	
 	
   # 9.2 create a new dummy player (Bar), get her token
 	TESTCOUNT="9.2"
@@ -487,7 +487,7 @@ function sidepath5
   # 10.1 remove Ryan from the session (do not want to delete a built in user)
         TESTCOUNT="10.1"
 	ARGS=(-X DELETE)
-	testMethod "$APIROOT/sessions/$SESSIONID/players/ryan?access_token=$USERTOKEN2" "200"	
+	testMethod "$APIROOT/sessions/$SESSIONID/players/marianick?access_token=$USERTOKEN2" "200"	
 	
   # 10.2 create a new dummy player (Bar), get her token
 	TESTCOUNT="10.2"
@@ -546,7 +546,7 @@ function sidepath6
   # 11.1 remove Ryan from the session (do not want to delete a built in user)
         TESTCOUNT="11.1"
 	ARGS=(-X DELETE)
-	testMethod "$APIROOT/sessions/$SESSIONID/players/ryan?access_token=$USERTOKEN2" "200"	
+	testMethod "$APIROOT/sessions/$SESSIONID/players/marianick?access_token=$USERTOKEN2" "200"	
 	
   # 11.2 create a new dummy player (Bar), get her token
 	TESTCOUNT="11.2"

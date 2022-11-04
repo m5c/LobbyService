@@ -27,18 +27,18 @@ function apiTestSequence2 {
 	ADMINTOKEN=$(echo $PAYLOAD | cut -c 18-45)
 	echo "[DEBUG] Admin-token: $ADMINTOKEN"
 
-  # 2.2 request joerg session token
+  # 2.2 request linus session token
 	TESTCOUNT="2.2"
 	ARGS=(-X POST --user bgp-client-name:bgp-client-pw)
-	testMethod "$TOKENROOT/token?grant_type=password&username=joerg&password=abc123_ABC123" "200"
-	JOERGTOKEN=$(echo $PAYLOAD | cut -c 18-45)
-	echo "[DEBUG] Joerg-token: $JOERGTOKEN"
+	testMethod "$TOKENROOT/token?grant_type=password&username=linus&password=abc123_ABC123" "200"
+	LINUSTOKEN=$(echo $PAYLOAD | cut -c 18-45)
+	echo "[DEBUG] Joerg-token: $LINUSTOKEN"
 
-  # 3.1 try to resolve joerg token
+  # 3.1 try to resolve linus token
 	TESTCOUNT="3.1"
-	ARGS=(-X GET  -H "Authorization:Bearer $JOERGTOKEN") # Note: Requires the UNESCAPED token as param.
+	ARGS=(-X GET  -H "Authorization:Bearer $LINUSTOKEN") # Note: Requires the UNESCAPED token as param.
 	testMethod "$TOKENROOT/username" "200"
-	assertexists "joerg" $PAYLOAD
+	assertexists "linus" $PAYLOAD
 	
   # 3.2 try to resolve admin token
 	TESTCOUNT="3.2"
@@ -48,7 +48,7 @@ function apiTestSequence2 {
 
 	# from here one we need the escaped tokens, for we use tham as URL parameters.
 	ADMINTOKEN=$(escapetoken $ADMINTOKEN)
-	JOERGTOKEN=$(escapetoken $JOERGTOKEN)
+	LINUSTOKEN=$(escapetoken $LINUSTOKEN)
 
   # 4.1a create a new user "foo", who is a "player", using admin token, reject, URL mismatch
 	TESTCOUNT="4.1a"

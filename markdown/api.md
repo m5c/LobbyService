@@ -10,7 +10,7 @@ Structured representation of the Lobby Service's REST resources and offered acce
 
 Quick navigation:
 
- * [/api/online](#online)
+ * [/api/online](#debugging)
  * [/api/users](#users) and subresource
  * [/api/gameservice](#game-services) and subresource
  * [/api/sessions](#sessions) and subresource

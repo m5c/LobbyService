@@ -377,7 +377,7 @@ Optional, for P2P clients: ```location=___.___.___.___``` (must be a valid IP ad
             }
         ```
    * **PUT**: Registers a savegame at the LS.
-     * Request-Parameters: ```access_token=...``` (admin, must be the admin who registered the game-service)
+     * Request-Parameters: ```access_token=...``` (service, must match account who registered the game-service)
      * Header-Parameters: ```Content-Type: application/json```
      * Request-Body:  
         ```json
